@@ -11,7 +11,7 @@ export default function ThemeToggle() {
   return (
     <div className="flex items-center space-x-2">
       {/* Left label appears when the theme is light */}
-      <span className={`text-sm transition-opacity duration-300 ${theme === 'dark' ? 'opacity-0' : 'opacity-100'}`}>
+      <span className={`text-sm transition-opacity duration-300 text-black ${theme === 'dark' ? 'opacity-0' : 'opacity-100'}`}>
         Light
       </span>
       

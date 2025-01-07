@@ -10,9 +10,10 @@ export default function BookingList() {
     if (bookings.length === 0) {
         async function fetchBookings() {
             try {
-                const response = await fetch('../api/bookings'); // Call your API route
+                // Call your API route and cache data for 6 hours
+                const response = await fetch('/api/bookings', {next: { revalidate: 21600 }});
                 if (!response.ok) {
-                    throw new Error(`Error: ${response.status}`);
+                  throw new Error(`Error: ${response.status}`);
                 }
                 const data = await response.json(); // Parse JSON response
                 setBookings(data); // Set data to state

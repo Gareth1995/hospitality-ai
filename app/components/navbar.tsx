@@ -5,7 +5,7 @@ const Navbar = () => {
           <div className="flex-grow">
             <input
               type="text"
-              className=" w-[300%] bg-gray-700 text-gray-200 px-4 py-2 rounded-md"
+              className=" w-[300%] bg-[var(--navbar-bg-col)] text-[var(--navbar-text-col)] px-4 py-2 rounded-md"
               placeholder="Search..."
             />
           </div>

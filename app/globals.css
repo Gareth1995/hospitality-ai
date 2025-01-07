@@ -3,23 +3,42 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-rgb: 0, 0, 0;
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+  --card-bg-col: rgb(255,255,255);
+  --card-text-col: rgb(17, 24, 39);
+  --sidenav-bg-col: rgb(255, 255, 255);
+  --sidenav-border-col: rgb(229, 231, 235);
+  --sidenav-text-col: rgb(17, 24, 39);
+  --sidenav-hover-col: rgb(243, 244, 246);
+  --navbar-bg-col: rgb(229 231 235);
+  --navbar-text-col: rgb(229 231 235);
+
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 0, 0, 0;
     --background-rgb: 255, 255, 255;
   }
+} */
+
+/* Dark Theme */
+html[theme='dark'] {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 0, 0, 0;
+  --card-bg-col: rgb(55 65 81);
+  --card-text-col: rgb(255, 255, 255);
+  --sidenav-bg-col: rgb(55 65 81);
+  --sidenav-border-col: rgb(55 65 81);
+  --sidenav-text-col: rgb(255, 255, 255);
+  --sidenav-hover-col: rgb(0, 0, 0);
+  --navbar-bg-col: rgb(55 65 81);
+  --navbar-text-col: rgb(229 231 235);
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background-color: rgb(var(--background-rgb)); /* Apply the background color */
   padding: 1rem;
-}
-
-html[theme='dark'] body {
-  background-color: rgb(190, 30, 30); /* Dark mode background color */
 }
