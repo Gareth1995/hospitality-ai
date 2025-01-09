@@ -34,7 +34,7 @@ export default function BookingList() {
         <ul>
           {bookings.map((booking, index) => (
             <li key={index}>
-              {booking.hotel} - {booking.arrival_date_year}
+              {booking.formatted_date} - {booking.count}
             </li>
           ))}
         </ul>

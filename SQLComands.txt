@@ -1,0 +1,26 @@
+# select statement for calendar data
+`SELECT
+      TO_DATE(
+        CONCAT(
+        arrival_date_year, '-', 
+        CASE arrival_date_month
+          WHEN 'January' THEN '01'
+          WHEN 'February' THEN '02'
+          WHEN 'March' THEN '03'
+          WHEN 'April' THEN '04'
+          WHEN 'May' THEN '05'
+          WHEN 'June' THEN '06'
+          WHEN 'July' THEN '07'
+          WHEN 'August' THEN '08'
+          WHEN 'September' THEN '09'
+          WHEN 'October' THEN '10'
+          WHEN 'November' THEN '11'
+          WHEN 'December' THEN '12'
+        END, '-', arrival_date_day_of_month), 
+        'YYYY-MM-DD') AS formatted_date,
+      COUNT(*) AS count
+      FROM bookings
+      GROUP BY
+      formatted_date
+      ORDER BY
+      formatted_date`
