@@ -13,6 +13,14 @@ const Charts = () => {
     }
   ), [])
 
+    // Dynamically import the D3 Choropleth Map with no SSR
+  //   const D3ChoroplethMap = useMemo(() => dynamic(() => import('./d3Chart'),
+  //   {
+  //     loading: () => <p>The choropleth map is loading...</p>,
+  //     ssr: false, // Ensure it's client-side only
+  //   }
+  // ), []);
+
   return (
     <>
       <section>
@@ -48,7 +56,7 @@ const Charts = () => {
       </section>
 
       <section className="flex my-4 px-4 gap-3">
-        <div className="w-full h-[300px] bg-[var(--card-bg-col)] rounded">
+        <div className="w-full h-[400px] bg-[var(--card-bg-col)] rounded">
           <Map posix={[4.79029, -75.69003]} />
         </div>
       </section>

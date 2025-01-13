@@ -11,10 +11,12 @@
   "dependencies": {
     "@nivo/calendar": "^0.88.0",
     "@nivo/core": "^0.88.0",
+    "@types/d3": "^7.4.3",
     "@types/node": "22.10.2",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
     "autoprefixer": "10.4.20",
+    "d3": "^7.9.0",
     "eslint": "9.17.0",
     "eslint-config-next": "15.1.0",
     "leaflet": "1.8",
@@ -28,6 +30,7 @@
     "react-leaflet": "^4.0.0",
     "recharts": "^2.15.0",
     "tailwindcss": "3.4.16",
+    "topojson": "^3.0.2",
     "typescript": "5.7.2"
   },
   "devDependencies": {
