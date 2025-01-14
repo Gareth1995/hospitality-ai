@@ -1,6 +1,7 @@
 // 'use client';
 
 import NivoCalendarChart from './NivoCalendarChart';
+// import DemographicsChart from './demographicsChart';
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 
@@ -13,13 +14,12 @@ const Charts = () => {
     }
   ), [])
 
-    // Dynamically import the D3 Choropleth Map with no SSR
-  //   const D3ChoroplethMap = useMemo(() => dynamic(() => import('./d3Chart'),
-  //   {
-  //     loading: () => <p>The choropleth map is loading...</p>,
-  //     ssr: false, // Ensure it's client-side only
-  //   }
-  // ), []);
+  // Dynamically import demographics chart with no SSR
+  const DemographicsChart = useMemo(() => dynamic(() => import('./demographicsChart'),
+    {
+        loading: () => <p>Demo chart is loading</p>,
+    }
+  ), [])
 
   return (
     <>
@@ -56,13 +56,15 @@ const Charts = () => {
       </section>
 
       <section className="flex my-4 px-4 gap-3">
-        <div className="w-full h-[400px] bg-[var(--card-bg-col)] rounded">
+        <div className="w-full h-[500px] bg-[var(--card-bg-col)] rounded">
           <Map posix={[4.79029, -75.69003]} />
         </div>
       </section>
 
       <section className="flex my-4 px-4 gap-2">
-        <div className=" w-1/2 h-[250px] bg-[var(--card-bg-col)] rounded"></div>
+        <div className=" w-1/2 h-[250px] bg-[var(--card-bg-col)] rounded">
+          <DemographicsChart/>        
+        </div>
         <div className=" w-1/2 h-[250px] bg-[var(--card-bg-col)] rounded"></div>
       </section>
 
