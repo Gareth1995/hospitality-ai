@@ -46,13 +46,33 @@ export async function GET(request) {
         await newTab.locator('[data-testid="fr-read-all-reviews"]').click();
 
         console.log('read all reviews clicked');
-        
-        // await page.locator('[data-testid="review-score-read-all"]').waitFor({ state: 'visible' });
-        // const seeReviews = await page.locator('[data-testid="review-score-read-all"]')
-        // await page.waitForTimeout(10000); // 10sec delay before retry
-                
+                        
 
         // get all reviews
+        // await newTab.locator('[data-testid="review-card"]').waitFor({ state: 'visible', timeout: 10000 });
+        await newTab.waitForTimeout(5000);
+        const reviewCards = await newTab.locator('[data-testid="review-card"]').all();
+
+        // Get the count of review cards
+        // const count = await reviewCards.count();
+        const count = reviewCards.length;
+        console.log(`Found ${count} review cards.`);
+
+        // Initialize an array to store the reviews
+        const reviewshtml = [];
+
+        // Iterate through each review card and extract the HTML content
+        for (const reviewCard of reviewCards) {
+            const reviewHTML = await reviewCard.innerHTML();
+            reviewshtml.push(reviewHTML);
+        }
+
+        // Log the reviews
+        console.log('Reviews:', reviewshtml);
+
+        // // Retrieve the entire element handle if needed
+        // const reviewElementHandle = await reviewDiv.elementHandle();
+        // console.log(reviewElementHandle);
 
         await page.waitForTimeout(5000);
 
