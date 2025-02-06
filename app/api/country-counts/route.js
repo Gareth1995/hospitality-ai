@@ -1,6 +1,5 @@
 // get counts of visitors per country
 import { NextResponse } from 'next/server';
-// import { pool } from '../../../utils/db'; // Your DB connection pool
 import { Pool } from 'pg';
 
 // Set up PostgreSQL connection pool
@@ -18,7 +17,7 @@ export async function GET() {
   try {
     const result = await pool.query(`
       SELECT country, COUNT(*) AS count
-      FROM bookings
+      FROM reviews
       GROUP BY country
     `);
     return NextResponse.json(result.rows);

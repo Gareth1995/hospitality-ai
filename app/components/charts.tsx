@@ -9,11 +9,11 @@ import { useMemo } from "react";
 const Charts = () => {
 
   // Dynamically import leaflet chart with no SSR
-  // const Map = useMemo(() => dynamic(() => import('./Map/'),
-  //   {
-  //       loading: () => <p>A map is loading</p>,
-  //   }
-  // ), [])
+  const Map = useMemo(() => dynamic(() => import('./Map/'),
+    {
+        loading: () => <p>A map is loading</p>,
+    }
+  ), [])
 
   // Dynamically import average rating
   const AvgRating = useMemo(() => dynamic(() => import('./avgRating'),
@@ -66,13 +66,13 @@ const Charts = () => {
 
       <section className="flex my-4 px-4 gap-3">
         <div className="w-full h-[300px] bg-[var(--card-bg-col)] rounded">
-          {/* <NivoCalendarChart/> */}
+          <Map posix={[4.79029, -75.69003]} />
         </div>
       </section>
 
       <section className="flex my-4 px-4 gap-3">
         <div className="w-full h-[500px] bg-[var(--card-bg-col)] rounded">
-          {/* <Map posix={[4.79029, -75.69003]} /> */}
+          
         </div>
       </section>
 

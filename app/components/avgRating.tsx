@@ -14,7 +14,7 @@ const AvgRating = () => {
           throw new Error("Failed to fetch rating");
         }
         const data = await response.json();
-        console.log(data);
+        
         if (Array.isArray(data) && data.length > 0 && data[0].average_rating) {
         //   setRating(data[0].average_rating); // Format to 2 decimal places
             setRating(parseFloat(data[0].average_rating).toFixed(2));
