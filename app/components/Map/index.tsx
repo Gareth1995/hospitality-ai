@@ -136,6 +136,44 @@ const ChoroplethMap = () => {
           `<strong>${feature.properties.admin}</strong><br>Reviews: ${countryCountsRef.current[countryCode] || "No data"}`
         );
       },
+
+      click: () => {
+        console.log(`Clicked on: ${countryCode}`);
+
+        // Fetch detailed reviews for the clicked country
+        fetch(`/api/country-reviews?country=${encodeURIComponent(countryCode)}`)
+          .then((response) => response.json())
+          .then((reviews) => {
+            console.log("Reviews for", countryCode, reviews);
+
+            // Create a popup with scrollable review content
+            const popupContent = `
+              <div style="max-height: 200px; overflow-y: auto;">
+                <h4>${countryCode} Reviews</h4>
+                <ul style="padding-left: 10px;">
+                  ${reviews.length > 0
+                    ? reviews
+                        .map((r) => `<li><strong>${r.user_name}:</strong> ${r.review_text}</li>`)
+                        .join("")
+                    : "<li>No reviews available</li>"}
+                </ul>
+              </div>
+            `;
+
+            // Bind popup to the clicked country
+            layer.bindPopup(popupContent).openPopup();
+          })
+          .catch((error) => {
+            console.error("Error fetching reviews:", error);
+            const errorPopup = `
+              <div>
+                <h4>Error fetching reviews</h4>
+                <p>There was an error loading the reviews. Please try again later.</p>
+              </div>
+            `;
+            layer.bindPopup(errorPopup).openPopup();
+          });
+      },
     });
   };
 
