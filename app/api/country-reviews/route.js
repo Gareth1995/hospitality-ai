@@ -12,11 +12,12 @@ pool.on('error', (err) => {
 });
 
 // API handler to fetch booking data
-export async function GET() {
+export async function GET(req) {
    
-  // Get the country from the query string
-   const { searchParams } = new URL(req.url);
-   const country = searchParams.get("country");
+   // Get the country from the query string using req.query
+  //  const { country } = req.query;  // Access query parameters like this
+  const url = new URL(req.url); // Create a new URL object from the request URL
+  const country = url.searchParams.get('country'); // Get the country parameter
 
   if (!country) {
     return new Response(JSON.stringify({ error: "Country is required" }), { status: 400 });
@@ -28,7 +29,7 @@ export async function GET() {
 
     // Query PostgreSQL for reviews where the country matches
     const result = await client.query(
-      "SELECT user_name, review_text, rating FROM reviews WHERE country = $1",
+      "SELECT reviewer_name, review_text, review_rating FROM reviews WHERE country = $1",
       [country]
     );
     
