@@ -11,7 +11,7 @@ const Charts = () => {
   // Dynamically import leaflet chart with no SSR
   const Map = useMemo(() => dynamic(() => import('./Map/'),
     {
-        loading: () => <p>A map is loading</p>,
+        loading: () => <p>A map is loading</p>
     }
   ), [])
 
@@ -29,13 +29,6 @@ const Charts = () => {
     }
   ), [])
 
-  // Dynamically import demographics chart with no SSR
-  // const DemographicsChart = useMemo(() => dynamic(() => import('./demographicsChart'),
-  //   {
-  //       loading: () => <p>Demo chart is loading</p>,
-  //   }
-  // ), [])
-
   return (
     <>
       <section>
@@ -43,14 +36,16 @@ const Charts = () => {
           <div className="flex-1 px-2 justify-center w-16 bg-[var(--card-bg-col)] shadow rounded h-300px">
             <div className="">
               <p className="text-[var(--card-text-col)]">Average Guest Rating</p>
-              <p className="py-4 font-bold text-[var(--card-text-col)]"><AvgRating/></p>
+              {/* <p className="py-4 font-bold text-[var(--card-text-col)]"><AvgRating/></p> */}
+              <div className="py-4 font-bold text-[var(--card-text-col)]"><AvgRating /></div>
               {/* <p className="text-green-500">+34.5%</p> */}
             </div>
           </div>
           <div className="flex-1 px-2 justify-center w-16 bg-[var(--card-bg-col)] shadow rounded max-h-300px">
             <div className="">
               <p className="text-[var(--card-text-col)]">Sentiment</p>
-              <p className="py-4 font-bold text-[var(card-text-col)]"> <ModalSentiment/> </p>
+              {/* <p className="py-4 font-bold text-[var(card-text-col)]"> <ModalSentiment/> </p> */}
+              <div className="py-4 font-bold text-[var(--card-text-col)]"><ModalSentiment /></div>
               {/* <p className="text-green-500">+34.5%</p> */}
             </div>
           </div>

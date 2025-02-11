@@ -1,21 +1,17 @@
-import Sidebar from './components/sidebar'
-import Navbar from './components/navbar'
-import Charts from './components/charts'
-import ThemeToggle from './components/toggle';
+import { Button } from "@heroui/button";
+import Link from 'next/link';
+import {RegisterLink, LoginLink} from "@kinde-oss/kinde-auth-nextjs/components";
 
-export default function Home() {
+export default function SplashPage() {
   return (
-    <>
-      <div className="flex">
-        <Sidebar/>
-        <main className="flex-grow ml-64 relative">
-          <div className="flex items-center justify-between p-4">
-            <Navbar/>
-            <ThemeToggle/>
-          </div>
-          <Charts/>
-        </main>
-      </div>
-    </>
-  )
+    <div>
+      <h1>Welcome to Our App!</h1>
+      <p>Your personalized journey starts here.</p>
+      <Button color="primary">
+        <LoginLink>Sign In</LoginLink>
+      </Button>
+      
+    </div>
+  );
 }
+

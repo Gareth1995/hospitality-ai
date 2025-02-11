@@ -5,50 +5,76 @@ import "leaflet/dist/leaflet.css";
 import { useEffect, useState, useRef } from "react";
 import worldGeoJson from "../../data/world.geo.json"; // importing world map
 import L from "leaflet"; // Import Leaflet for adding custom controls
-import * as d3 from "d3"; // Import d3-scale
 
 const ChoroplethMap = () => {
   // variable to hold <country; count> values
-  const [countryCounts, setCountryCounts] = useState({});
-  const countryCountsRef = useRef({}); // Store latest countryCounts in a ref
+  const [countrySentiments, setcountrySentiments] = useState({});
+  const [numReviews, setnumReviews] = useState({});
+  const countrySentimentsRef = useRef({}); // Store latest countryCounts in a ref
+  const countrynumReviewsRef = useRef({});
 
   // Fetch the country counts from the API
   useEffect(() => {
-    fetch("/api/country-counts")
+    // fetch the modal country sentiment
+    fetch("/api/country-modal-sentiment")
       .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        const counts = data.reduce((acc, item) => {
-          acc[item.country] = item.count; // each element in acc is {countryName: 'name', count: count}
-          return acc; // return acc each time to continue accumulation
+      .then((data: { country: string; modal_sentiment?: string }[]) => {
+        console.log("fetched data:", data);
+
+        // Convert array to object { countryName: sentiment }
+        const sentiments = data.reduce<Record<string, string>>((acc, item) => {
+          acc[item.country] = item.modal_sentiment || 'neutral'; // Map country name to sentiment
+          return acc;
         }, {});
-        setCountryCounts(counts); // set array of country - count dictionaries
-        countryCountsRef.current = counts; // Update ref
+
+        console.log("Processed Sentiments:", sentiments);
+
+        setcountrySentiments(sentiments); // set array of country - count dictionaries
+        countrySentimentsRef.current = sentiments; // Update ref
+        // setTimeout(() => console.log("Updated state:", countryCountsRef.current), 100); // Delay to check if state updates
       })
       .catch((error) => console.error("Error fetching country counts:", error));
+
+      // fetch the number of reviews per country
+      fetch("/api/country-counts")
+      .then((response) => response.json())
+      .then((data: { country: string; count?: string }[]) => {
+        console.log("fetched data:", data);
+
+        // Convert array to object { countryName: sentiment }
+        const c = data.reduce<Record<string, string>>((acc, item) => {
+          acc[item.country] = item.count || "0"; // Map country name to sentiment
+          return acc;
+        }, {});
+
+        console.log("Processed Counts:", c);
+
+        setnumReviews(c); // set array of country - count dictionaries
+        countrynumReviewsRef.current = c; // Update ref
+        setTimeout(() => console.log("Updated state:", countrynumReviewsRef.current), 100); // Delay to check if state updates
+      })
+      .catch((error) => console.error("Error fetching country counts:", error));
+
   }, []);
 
-  // Generate a color scale dynamically based on the countryCounts data
-  const getColorScale = () => {
-    const counts = Object.values(countryCounts);
-    const min = Math.min(...counts);
-    const max = Math.max(...counts);
-
-    // Ensure the minimum is set to 0 for better visual distinction of small values
-    return d3.scaleSequential(d3.interpolateWarm).domain([min, max]);
+  const sentimentColors = {
+    anger: "#e74c3c",      // Red 😡
+    disgust: "#8e44ad",   // Purple 🤢
+    fear: "#34495e",      // Dark Blue-Gray 😨
+    joy: "#80ff00",       // Yellow 😀
+    neutral: "#666600",   // Gray 😐
+    sadness: "#3498db",   // Blue 😭
+    surprise: "#e67e22",  // Orange 😲
   };
 
-  const getColor = (count) => {
-    const colorScale = getColorScale(); // Get the dynamic color scale
-    return colorScale(count || 0); // Use the color scale to assign colors
-  };
+  const getColor = (sentiment) => sentimentColors[sentiment] || "#bdc3c7"; // Default grey for missing data
 
   // Styling function for each country in the GeoJSON
   const style = (feature) => {
     const countryCode = feature.properties.admin; // calling name property of world map
-    const count = countryCounts[countryCode] || 0;
+    const sent = countrySentiments[countryCode] || 0;
 
-    if (!count) {
+    if (!sent) {
       // Return a transparent style for countries with no data
       return {
         fillColor: "transparent",
@@ -61,65 +87,63 @@ const ChoroplethMap = () => {
     }
 
     return {
-      fillColor: getColor(count),
+      fillColor: getColor(sent),
       weight: 1,
       opacity: 1,
       color: "white",
       dashArray: "3",
       fillOpacity: 0.7,
     };
-  };
+  }
 
-  // Function to create a legend
+  // Function to create a legend for sentiment categories
   const Legend = () => {
-    const map = useMap(); // Get the map instance from the useMap hook
+    const map = useMap(); // Get the map instance
 
     useEffect(() => {
-      const colorScale = getColorScale(); // Get the color scale used for the map
-
       const legend = L.control({ position: "bottomleft" });
 
       legend.onAdd = function () {
         const div = L.DomUtil.create("div", "info legend");
-        const counts = Object.values(countryCounts);
-        const min = Math.min(...counts);
-        const max = Math.max(...counts);
 
         // Add a header to the legend
-        div.innerHTML += "<h4>Guest Frequency</h4>";
+        div.innerHTML += "<h4>Sentiment Legend</h4>";
 
-        // Create a gradient of colors based on the data range
-        const numberOfColors = 6; // Number of colors in the gradient (adjustable)
-        const steps = Array.from({ length: numberOfColors }, (_, i) => min + ((max - min) / (numberOfColors - 1)) * i);
+        // Define sentiment categories and colors
+        const sentiments = {
+          anger: "#e74c3c",      // Red 😡
+          disgust: "#8e44ad",   // Purple 🤢
+          fear: "#34495e",      // Dark Blue-Gray 😨
+          joy: "#80ff00",       // Yellow 😀
+          neutral: "#666600",   // Gray 😐
+          sadness: "#3498db",   // Blue 😭
+          surprise: "#e67e22",  // Orange 😲
+        };
 
-        // Generate color boxes and labels for each step in the scale
-        steps.forEach((step) => {
-          const color = colorScale(step);
+        // Generate color boxes and labels for each sentiment
+        Object.entries(sentiments).forEach(([sentiment, color]) => {
           div.innerHTML +=
-            '<i style="background:' +
-            color +
-            '"></i> ' +
-            Math.round(step) + // Display rounded values
-            (steps.indexOf(step) !== steps.length - 1 ? "&ndash;" + Math.round(steps[steps.indexOf(step) + 1]) + "<br>" : "+");
+            `<i style="background:${color}"></i> ${sentiment.charAt(0).toUpperCase() + sentiment.slice(1)}<br>`;
         });
 
         return div;
       };
 
-      legend.addTo(map); // Add the legend to the map
+      legend.addTo(map); // Add legend to the map
 
-      // Clean up the previous legend when the component unmounts
+      // Remove legend when component unmounts
       return () => {
         map.removeControl(legend);
       };
-    }, [map, countryCounts]); // Re-run effect when countryCounts changes
+    }, [map]);
 
     return null; // This component doesn't render anything itself
   };
 
+
   const onEachFeature = (feature, layer) => {
     const countryCode = feature.properties.admin;
-    const c = countryCountsRef.current[countryCode];
+    const c = countrySentimentsRef.current[countryCode];
 
     // Add a tooltip with the country name and review count
     layer.bindTooltip(
@@ -133,7 +157,8 @@ const ChoroplethMap = () => {
 
         // Update tooltip dynamically with the latest count
         layer.setTooltipContent(
-          `<strong>${feature.properties.admin}</strong><br>Reviews: ${countryCountsRef.current[countryCode] || "No data"}`
+          `<strong>${feature.properties.admin}</strong><br>Average Sentiment: ${countrySentimentsRef.current[countryCode] || "No data"}
+           <br># Reviews: ${countrynumReviewsRef.current[countryCode] || "No data"}`
         );
       },
 
@@ -153,7 +178,8 @@ const ChoroplethMap = () => {
                 <ul style="padding-left: 10px;">
                   ${reviews.length > 0
                     ? reviews
-                        .map((r) => `<li><strong>${r.user_name}:</strong> ${r.review_text}</li>`)
+                        .filter((r) => r.review_text) // Exclude reviews with empty review_text
+                        .map((r) => `<li><strong>${r.reviewer_name}:</strong> ${r.review_text || "No text comment provided"}</li>`)
                         .join("")
                     : "<li>No reviews available</li>"}
                 </ul>

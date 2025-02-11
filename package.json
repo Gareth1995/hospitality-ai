@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroui/button": "^2.2.10",
+    "@heroui/react": "^2.6.14",
+    "@heroui/theme": "^2.4.6",
+    "@kinde-oss/kinde-auth-nextjs": "^2.5.0",
     "@nivo/bar": "^0.88.0",
     "@nivo/boxplot": "^0.88.0",
     "@nivo/calendar": "^0.88.0",
@@ -22,6 +26,7 @@
     "d3": "^7.9.0",
     "eslint": "9.17.0",
     "eslint-config-next": "15.1.0",
+    "framer-motion": "^12.4.2",
     "leaflet": "1.8",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "leaflet-geosearch": "^4.0.0",
