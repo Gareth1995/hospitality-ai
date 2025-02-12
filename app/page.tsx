@@ -7,9 +7,12 @@ export default function SplashPage() {
     <div>
       <h1>Welcome to Our App!</h1>
       <p>Your personalized journey starts here.</p>
-      <Button color="primary">
+      {/* <Button color="primary">
         <LoginLink>Sign In</LoginLink>
-      </Button>
+      </Button> */}
+      <Link href="/login">
+        <Button color="primary">Sign In</Button>
+      </Link>
       
     </div>
   );

@@ -1,8 +1,3 @@
-// 'use client';
-
-// import NivoCalendarChart from './NivoCalendarChart';
-// import DemographicsChart from './demographicsChart';
-// import AvgRating from './avgRating';
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 

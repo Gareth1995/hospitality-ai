@@ -2,6 +2,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from './context/theme-context';
 import {HeroProvider} from "./context/hero-provider";
+import { HotelIDProvider } from './context/authContext';
 import 'leaflet/dist/leaflet.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -15,11 +16,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <HeroProvider>
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
-        </HeroProvider>
+        <HotelIDProvider>
+          <HeroProvider>
+            <ThemeProvider>
+              {children}
+            </ThemeProvider>
+          </HeroProvider>
+        </HotelIDProvider>
       </body>
     </html>
   );
