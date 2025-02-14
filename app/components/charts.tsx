@@ -1,14 +1,28 @@
+"use client";
+
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 
 const Charts = () => {
 
   // Dynamically import leaflet chart with no SSR
-  const Map = useMemo(() => dynamic(() => import('./Map/'),
-    {
-        loading: () => <p>A map is loading</p>
-    }
-  ), [])
+  // const Map = useMemo(() => dynamic(() => import('./Map/'),
+  //   {
+  //       loading: () => <p>A map is loading</p>
+  //   }
+  // ), [])
+
+  // Dynamically import ChoroplethMap with no SSR
+  // const ChoroplethMap = useMemo(
+  //   () =>
+  //     dynamic(() => import("./Map"), {
+  //       loading: () => <p>A map is loading</p>,
+  //       ssr: false, // Disable server-side rendering
+  //     }),
+  //   []
+  // );
+
+  const ChoroplethMap = dynamic(() => import("./Map"), { ssr: false });
 
   // Dynamically import average rating
   const AvgRating = useMemo(() => dynamic(() => import('./avgRating'),
@@ -56,7 +70,8 @@ const Charts = () => {
 
       <section className="flex my-4 px-4 gap-3">
         <div className="w-full h-[300px] bg-[var(--card-bg-col)] rounded">
-          <Map posix={[4.79029, -75.69003]} />
+          {/* <Map posix={[4.79029, -75.69003]} /> */}
+          {/* <ChoroplethMap/> */}
         </div>
       </section>
 
