@@ -7,11 +7,6 @@ import worldGeoJson from "../../data/world.geo.json"; // importing world map
 import L from "leaflet"; // Import Leaflet for adding custom controls
 import dynamic from "next/dynamic";
 
-// Lazy-load react-leaflet and Leaflet components
-const MapContainer = dynamic(() => import("react-leaflet").then(mod => mod.MapContainer), { ssr: false });
-const TileLayer = dynamic(() => import("react-leaflet").then(mod => mod.TileLayer), { ssr: false });
-const GeoJSON = dynamic(() => import("react-leaflet").then(mod => mod.GeoJSON), { ssr: false });
-
 const ChoroplethMap = () => {
   // variable to hold <country; count> values
   const [countrySentiments, setcountrySentiments] = useState({});
