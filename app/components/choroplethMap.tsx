@@ -23,6 +23,7 @@ const ChoroplethMap = () => {
   const countrySentimentsRef = useRef([]); // Store latest countryCounts in a ref
   const countrynumReviewsRef = useRef({});
   const [position, setPosition] = useState({ coordinates: [0, 0], zoom: 1 });
+  const [tooltip, setTooltip] = useState({ display: false, countryName: "", x: 0, y: 0 });
 
   function handleZoomIn() {
     if (position.zoom >= 4) return;
@@ -82,9 +83,31 @@ const ChoroplethMap = () => {
 
   }, []);
 
+  // Handle mouse enter to show the tooltip
+  const handleMouseEnter = (geo, evt) => {
+    const countryData = countrySentimentsRef.current.find(
+      (item) => item.country === geo.properties.name
+    );
+    const countryName = geo.properties.name;
+
+    setTooltip({
+      display: true,
+      countryName: countryName,
+      x: evt.clientX + 10,  // Add some margin to prevent it from sticking to the mouse
+      y: evt.clientY + 10
+    });
+  };
+
+  // Handle mouse leave to hide the tooltip
+  const handleMouseLeave = () => {
+    setTooltip({ display: false, countryName: "", x: 0, y: 0 });
+  };
+
   return (
     <>
-      <ComposableMap
+    {countrySentiments.length > 0
+    ?
+      (<ComposableMap
         projection="geoMercator"
         className="rounded-lg shadow-lg bg-white h-full w-full"
       >
@@ -115,6 +138,8 @@ const ChoroplethMap = () => {
                       hover: { fill: "#3b82f6", outline: "none" },
                       pressed: { outline: "none" },
                     }}
+                    onMouseEnter={(evt) => handleMouseEnter(geo, evt)}
+                    onMouseLeave={handleMouseLeave}
                   />
                 );
               })
@@ -122,7 +147,11 @@ const ChoroplethMap = () => {
           </Geographies>
         </ZoomableGroup>
 
-      </ComposableMap>
+      </ComposableMap>) 
+      :
+      <div className="flex items-center justify-center h-full w-full">
+        <p>Loading...</p>
+      </div> }
     </>
   );
 };
