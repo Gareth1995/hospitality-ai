@@ -86,39 +86,6 @@ const ChoroplethMap = () => {
 
   }, []);
 
-  // Handles the drag events
-  // const handleDragStart = (e) => {
-  //   // Prevent default drag behavior
-  //   e.preventDefault();
-    
-  //   // To track initial mouse position when dragging starts
-  //   let initialX = e.clientX;
-  //   let initialY = e.clientY;
-    
-  //   // Adding the drag listener
-  //   const handleDragging = (e) => {
-  //     const newX = revModalPositionX + (e.clientX - initialX);
-  //     const newY = revModalPositionY + (e.clientY - initialY);
-
-  //     setRevModalPositionX(newX);
-  //     setRevModalPositionY(newY);
-
-  //     // Update initial mouse position to current position
-  //     initialX = e.clientX;
-  //     initialY = e.clientY;
-  //   };
-
-  //   // Stop dragging when mouse is released
-  //   const handleDragEnd = () => {
-  //     window.removeEventListener("mousemove", handleDragging);
-  //     window.removeEventListener("mouseup", handleDragEnd);
-  //   };
-
-  //   // Attach dragging events to window
-  //   window.addEventListener("mousemove", handleDragging);
-  //   window.addEventListener("mouseup", handleDragEnd);
-  // };
-
   function handleZoomIn() {
     if (position.zoom >= 4) return;
     setPosition((pos) => ({ ...pos, zoom: pos.zoom * 2 }));
@@ -135,9 +102,11 @@ const ChoroplethMap = () => {
 
   // Handle mouse enter to show the tooltip
   const handleMouseEnter = (geo, evt) => {
+    console.log(evt);
     const countryData = countrySentimentsRef.current.find(
       (item) => item.country === geo.properties.name
     );
+
     const countryName = geo.properties.name;
     const numRevs = countrynumReviewsRef.current[countryName] || "0";
 
@@ -145,8 +114,8 @@ const ChoroplethMap = () => {
       ...prev,
       countryName,
       numReviews: numRevs,
-      xPosition: evt.clientX - 30,
-      yPosition: evt.clientY - 30,
+      xPosition: evt.pageX + 10,
+      yPosition: evt.pageY - 150,
       visible: true
     }));
   }
@@ -169,9 +138,6 @@ const ChoroplethMap = () => {
       setModalReviews(reviews);
       console.log('Modal Reviews:', modalReviews);
 
-      // setRevModalPositionX(`${tooltipData.xPosition}px`);
-      // setRevModalPositionY(`${tooltipData.yPosition}px`);
-      // setIsModalOpen(true);
       // Calculate the position based on mouse click
       let newX = evt.clientX;
       let newY = evt.clientY;
@@ -208,7 +174,7 @@ const ChoroplethMap = () => {
     ?
       (<ComposableMap
         projection="geoMercator"
-        className="rounded-lg shadow-lg bg-white h-full w-full"
+        className="rounded-lg shadow-lg bg-[var(--card-bg-col)] h-full w-full"
       >
         <ZoomableGroup
           zoom={position.zoom}
@@ -222,7 +188,6 @@ const ChoroplethMap = () => {
                   (item) => item.country === geo.properties.name
                 );
                 const sentiment = countryData ? countryData.modal_sentiment : null;
-                // const fillColor = colorMap[sentiment] || colorMap.null;
                 const fillColor = colorMap[sentiment] || colorMap.null;
 
                 return (
