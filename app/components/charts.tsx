@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
+import ChoroplethMapLegend from "./legend";
 
 
 const Charts = () => {
@@ -53,11 +54,33 @@ const Charts = () => {
         </div>
       </section>
 
-      <section className="flex my-4 px-4 gap-3">
-        <div className="w-full h-[500px] bg-[var(--card-bg-col)] rounded">
+      {/* <section className="flex my-4 px-4 gap-3">
+        <div className="w-[90%] h-[500px] bg-[var(--card-bg-col)] rounded">
           <ChoroplethMap/>
         </div>
+      </section> */}
+      {/* Map and Legend Section */}
+      <section className="flex my-4 px-4 gap-3">
+        <div className="flex w-full gap-3">
+          {/* Map Container */}
+          <div className="relative flex-1 h-[500px] bg-[var(--card-bg-col)]">
+            <ChoroplethMap />
+            {/* Legend positioned at the bottom-left of the map */}
+            <div className="absolute bottom-0 left-0 p-4">
+              <ChoroplethMapLegend />
+            </div>
+          </div>
+        </div>
       </section>
+
+      {/* <section className="flex my-4 px-4 gap-3">
+        <div className="flex w-[75%] h-[500px] bg-[var(--card-bg-col)] rounded">
+          <ChoroplethMapLegend className="w-[300px] ml-3" />
+          <ChoroplethMap className="flex-1" />
+        </div>
+      </section> */}
+
+      
 
       <section className="flex my-4 px-4 gap-3">
         <div className="w-full h-[500px] bg-[var(--card-bg-col)] rounded">
