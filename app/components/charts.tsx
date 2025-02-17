@@ -6,14 +6,8 @@ import { useMemo } from "react";
 
 const Charts = () => {
 
-  // Dynamically import leaflet chart with no SSR
-  // const Map = useMemo(() => dynamic(() => import('./Map/'),
-  //   {
-  //       loading: () => <p>A map is loading</p>
-  //   }
-  // ), [])
 
-  const NivoChoropleth = dynamic(() => import("./nivoChoropleth"), { ssr: false });
+  const ChoroplethMap = dynamic(() => import("./choroplethMap"), { ssr: false });
 
   // Dynamically import average rating
   const AvgRating = useMemo(() => dynamic(() => import('./avgRating'),
@@ -60,9 +54,8 @@ const Charts = () => {
       </section>
 
       <section className="flex my-4 px-4 gap-3">
-        <div className="w-full h-[300px] bg-[var(--card-bg-col)] rounded">
-          {/* <Map posix={[4.79029, -75.69003]} /> */}
-          <NivoChoropleth/>
+        <div className="w-full h-[500px] bg-[var(--card-bg-col)] rounded">
+          <ChoroplethMap/>
         </div>
       </section>
 
