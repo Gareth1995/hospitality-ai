@@ -1,6 +1,7 @@
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import { useEffect, useState, useRef } from "react";
 import Tooltip from "./mapTooltip";
+import ReviewModal from "./reviewTooltip";
 
 // Updated TopoJSON URL
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -33,19 +34,13 @@ const ChoroplethMap = () => {
     visible: false
   });
 
-  function handleZoomIn() {
-    if (position.zoom >= 4) return;
-    setPosition((pos) => ({ ...pos, zoom: pos.zoom * 2 }));
-  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [revModalPositionX, setRevModalPositionX] = useState('50%');
+  const [revModalPositionY, setRevModalPositionY] = useState('50%');
+  const [revModalCountry, setRevModalCountry] = useState("");
+  const [modalReviews, setModalReviews] = useState([]);
 
-  function handleZoomOut() {
-    if (position.zoom <= 1) return;
-    setPosition((pos) => ({ ...pos, zoom: pos.zoom / 2 }));
-  }
-
-  function handleMoveEnd(position) {
-    setPosition(position);
-  }
+  const modalRef = useRef(null); // Reference for the modal
 
   // Fetch the country counts from the API
   useEffect(() => {
@@ -91,6 +86,53 @@ const ChoroplethMap = () => {
 
   }, []);
 
+  // Handles the drag events
+  // const handleDragStart = (e) => {
+  //   // Prevent default drag behavior
+  //   e.preventDefault();
+    
+  //   // To track initial mouse position when dragging starts
+  //   let initialX = e.clientX;
+  //   let initialY = e.clientY;
+    
+  //   // Adding the drag listener
+  //   const handleDragging = (e) => {
+  //     const newX = revModalPositionX + (e.clientX - initialX);
+  //     const newY = revModalPositionY + (e.clientY - initialY);
+
+  //     setRevModalPositionX(newX);
+  //     setRevModalPositionY(newY);
+
+  //     // Update initial mouse position to current position
+  //     initialX = e.clientX;
+  //     initialY = e.clientY;
+  //   };
+
+  //   // Stop dragging when mouse is released
+  //   const handleDragEnd = () => {
+  //     window.removeEventListener("mousemove", handleDragging);
+  //     window.removeEventListener("mouseup", handleDragEnd);
+  //   };
+
+  //   // Attach dragging events to window
+  //   window.addEventListener("mousemove", handleDragging);
+  //   window.addEventListener("mouseup", handleDragEnd);
+  // };
+
+  function handleZoomIn() {
+    if (position.zoom >= 4) return;
+    setPosition((pos) => ({ ...pos, zoom: pos.zoom * 2 }));
+  }
+
+  function handleZoomOut() {
+    if (position.zoom <= 1) return;
+    setPosition((pos) => ({ ...pos, zoom: pos.zoom / 2 }));
+  }
+
+  function handleMoveEnd(position) {
+    setPosition(position);
+  }
+
   // Handle mouse enter to show the tooltip
   const handleMouseEnter = (geo, evt) => {
     const countryData = countrySentimentsRef.current.find(
@@ -98,7 +140,6 @@ const ChoroplethMap = () => {
     );
     const countryName = geo.properties.name;
     const numRevs = countrynumReviewsRef.current[countryName] || "0";
-    console.log(countryName, numRevs);
 
     setTooltipData((prev) => ({
       ...prev,
@@ -113,6 +154,52 @@ const ChoroplethMap = () => {
   // Handle mouse leave to hide the tooltip
   const handleMouseLeave = () => {
     setTooltipData({ ...tooltipData, visible: false });
+  };
+
+  // handle click on country event
+  const handleCountryClick = (geo, evt) => {
+    const countryName = geo.properties.name;
+    console.log(`${countryName} has been clicked`);
+
+    // Fetch detailed reviews for the clicked country
+    fetch(`/api/country-reviews?country=${encodeURIComponent(countryName)}`)
+    .then((response) => response.json())
+    .then((reviews) => {
+      console.log("Reviews for", countryName, reviews);
+      setModalReviews(reviews);
+      console.log('Modal Reviews:', modalReviews);
+
+      // setRevModalPositionX(`${tooltipData.xPosition}px`);
+      // setRevModalPositionY(`${tooltipData.yPosition}px`);
+      // setIsModalOpen(true);
+      // Calculate the position based on mouse click
+      let newX = evt.clientX;
+      let newY = evt.clientY;
+
+      // Ensure modal stays within the right boundary of the screen
+      const modalWidth = 300; // Adjust based on your modal size
+      if (newX + modalWidth > window.innerWidth) {
+        newX = window.innerWidth - modalWidth - 10; // 10px padding from the edge
+      }
+
+      // Ensure modal stays within the bottom boundary of the screen
+      const modalHeight = 400; // Adjust based on your modal size
+      if (newY + modalHeight > window.innerHeight) {
+        newY = window.innerHeight - modalHeight - 10; // 10px padding from the edge
+      }
+
+      // Set modal position and open it
+      setRevModalCountry(countryName);
+      setRevModalPositionX(newX);
+      setRevModalPositionY(newY);
+      setIsModalOpen(true);
+    })
+    .catch((error) => console.error("Error fetching country reviews:", error));
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setModalReviews([]);
   };
 
   return (
@@ -152,6 +239,7 @@ const ChoroplethMap = () => {
                     }}
                     onMouseEnter={(evt) => handleMouseEnter(geo, evt)}
                     onMouseLeave={handleMouseLeave}
+                    onClick={(evt) => handleCountryClick(geo, evt)}
                   />
                 );
               })
@@ -175,6 +263,16 @@ const ChoroplethMap = () => {
           />
         </div>
       )}
+
+      {/* Review Modal */}
+      <ReviewModal
+        reviews={modalReviews}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        positionX={revModalPositionX}
+        positionY={revModalPositionY}
+        country={revModalCountry}
+      />
     </>
   );
 };
