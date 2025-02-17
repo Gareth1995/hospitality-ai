@@ -7,7 +7,7 @@ const colorMap = {
     neutral: "#666600",   // Gray 😐
     sadness: "#3498db",   // Blue 😭
     surprise: "#e67e22",  // Orange 😲
-    null: '#808080'
+    "No Data": '#808080'
   };
 const ChoroplethMapLegend = () => {
     return (

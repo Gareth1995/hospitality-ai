@@ -1,6 +1,5 @@
-import { ComposableMap, Geographies, Geography } from "react-simple-maps";
+import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import { useEffect, useState, useRef } from "react";
-import ChoroplethMapLegend from "./legend";
 
 // Updated TopoJSON URL
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -23,6 +22,21 @@ const ChoroplethMap = () => {
   const [numReviews, setnumReviews] = useState({});
   const countrySentimentsRef = useRef([]); // Store latest countryCounts in a ref
   const countrynumReviewsRef = useRef({});
+  const [position, setPosition] = useState({ coordinates: [0, 0], zoom: 1 });
+
+  function handleZoomIn() {
+    if (position.zoom >= 4) return;
+    setPosition((pos) => ({ ...pos, zoom: pos.zoom * 2 }));
+  }
+
+  function handleZoomOut() {
+    if (position.zoom <= 1) return;
+    setPosition((pos) => ({ ...pos, zoom: pos.zoom / 2 }));
+  }
+
+  function handleMoveEnd(position) {
+    setPosition(position);
+  }
 
   // Fetch the country counts from the API
   useEffect(() => {
@@ -74,33 +88,39 @@ const ChoroplethMap = () => {
         projection="geoMercator"
         className="rounded-lg shadow-lg bg-white h-full w-full"
       >
-        <Geographies geography={geoUrl}>
-          {({ geographies }) =>
-            geographies.map((geo) => {
-              const countryData = countrySentimentsRef.current.find(
-                (item) => item.country === geo.properties.name
-              );
-              const sentiment = countryData ? countryData.modal_sentiment : null;
-              // const fillColor = colorMap[sentiment] || colorMap.null;
-              const fillColor = colorMap[sentiment] || colorMap.null;
+        <ZoomableGroup
+          zoom={position.zoom}
+          center={position.coordinates}
+          onMoveEnd={handleMoveEnd}
+        >
+          <Geographies geography={geoUrl}>
+            {({ geographies }) =>
+              geographies.map((geo) => {
+                const countryData = countrySentimentsRef.current.find(
+                  (item) => item.country === geo.properties.name
+                );
+                const sentiment = countryData ? countryData.modal_sentiment : null;
+                // const fillColor = colorMap[sentiment] || colorMap.null;
+                const fillColor = colorMap[sentiment] || colorMap.null;
 
-              return (
-                <Geography
-                  key={geo.rsmKey}
-                  geography={geo}
-                  fill={fillColor}
-                  stroke="#FFF"
-                  strokeWidth={0.5}
-                  style={{
-                    default: { outline: "none" },
-                    hover: { fill: "#3b82f6", outline: "none" },
-                    pressed: { outline: "none" },
-                  }}
-                />
-              );
-            })
-          }
-        </Geographies>
+                return (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    fill={fillColor}
+                    stroke="#FFF"
+                    strokeWidth={0.5}
+                    style={{
+                      default: { outline: "none" },
+                      hover: { fill: "#3b82f6", outline: "none" },
+                      pressed: { outline: "none" },
+                    }}
+                  />
+                );
+              })
+            }
+          </Geographies>
+        </ZoomableGroup>
 
       </ComposableMap>
     </>
