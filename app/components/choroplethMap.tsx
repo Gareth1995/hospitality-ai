@@ -1,5 +1,6 @@
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
 import { useEffect, useState, useRef } from "react";
+import Tooltip from "./mapTooltip";
 
 // Updated TopoJSON URL
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -23,7 +24,14 @@ const ChoroplethMap = () => {
   const countrySentimentsRef = useRef([]); // Store latest countryCounts in a ref
   const countrynumReviewsRef = useRef({});
   const [position, setPosition] = useState({ coordinates: [0, 0], zoom: 1 });
-  const [tooltip, setTooltip] = useState({ display: false, countryName: "", x: 0, y: 0 });
+
+  const [tooltipData, setTooltipData] = useState({
+    countryName: "",
+    numReviews: 0,
+    xPosition: 0,
+    yPosition: 0,
+    visible: false
+  });
 
   function handleZoomIn() {
     if (position.zoom >= 4) return;
@@ -77,7 +85,7 @@ const ChoroplethMap = () => {
 
         setnumReviews(c); // set array of country - count dictionaries
         countrynumReviewsRef.current = c; // Update ref
-        // setTimeout(() => console.log("Updated state:", countrynumReviewsRef.current), 100); // Delay to check if state updates
+        setTimeout(() => console.log("Number of reviews:", countrynumReviewsRef.current), 100); // Delay to check if state updates
       })
       .catch((error) => console.error("Error fetching country counts:", error));
 
@@ -89,18 +97,22 @@ const ChoroplethMap = () => {
       (item) => item.country === geo.properties.name
     );
     const countryName = geo.properties.name;
+    const numRevs = countrynumReviewsRef.current[countryName] || "0";
+    console.log(countryName, numRevs);
 
-    setTooltip({
-      display: true,
-      countryName: countryName,
-      x: evt.clientX + 10,  // Add some margin to prevent it from sticking to the mouse
-      y: evt.clientY + 10
-    });
-  };
+    setTooltipData((prev) => ({
+      ...prev,
+      countryName,
+      numReviews: numRevs,
+      xPosition: evt.clientX - 30,
+      yPosition: evt.clientY - 30,
+      visible: true
+    }));
+  }
 
   // Handle mouse leave to hide the tooltip
   const handleMouseLeave = () => {
-    setTooltip({ display: false, countryName: "", x: 0, y: 0 });
+    setTooltipData({ ...tooltipData, visible: false });
   };
 
   return (
@@ -147,11 +159,22 @@ const ChoroplethMap = () => {
           </Geographies>
         </ZoomableGroup>
 
-      </ComposableMap>) 
-      :
+      </ComposableMap>) :
       <div className="flex items-center justify-center h-full w-full">
         <p>Loading...</p>
       </div> }
+
+      {/* Tooltip Overlay */}
+      {tooltipData.visible && (
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+          <Tooltip
+            countryName={tooltipData.countryName}
+            numReviews={tooltipData.numReviews}
+            xPosition={tooltipData.xPosition}
+            yPosition={tooltipData.yPosition}
+          />
+        </div>
+      )}
     </>
   );
 };
