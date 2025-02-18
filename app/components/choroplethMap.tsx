@@ -48,7 +48,7 @@ const ChoroplethMap = () => {
     fetch("/api/country-modal-sentiment")
       .then((response) => response.json())
       .then((data: { country: string; modal_sentiment?: string }[]) => {
-        console.log("fetched sentiment data:", data);
+        // console.log("fetched sentiment data:", data);
         
         // Convert any "null" modal_sentiment to "neutral"
         const updatedData = data.map((item) => ({
@@ -56,10 +56,10 @@ const ChoroplethMap = () => {
           modal_sentiment: item.modal_sentiment === null ? "neutral" : item.modal_sentiment,
         }));
 
-        console.log("Updated Sentiment Data:", updatedData);
+        // console.log("Updated Sentiment Data:", updatedData);
         setcountrySentiments(updatedData); // set array of country - count dictionaries
         countrySentimentsRef.current = updatedData; // Update ref
-        setTimeout(() => console.log("Sentiment Ref:", countrySentimentsRef.current), 100);
+        // setTimeout(() => console.log("Sentiment Ref:", countrySentimentsRef.current), 100);
       })
 
       .catch((error) => console.error("Error fetching country counts:", error));
@@ -80,7 +80,7 @@ const ChoroplethMap = () => {
 
         setnumReviews(c); // set array of country - count dictionaries
         countrynumReviewsRef.current = c; // Update ref
-        setTimeout(() => console.log("Number of reviews:", countrynumReviewsRef.current), 100); // Delay to check if state updates
+        // setTimeout(() => console.log("Number of reviews:", countrynumReviewsRef.current), 100); // Delay to check if state updates
       })
       .catch((error) => console.error("Error fetching country counts:", error));
 
@@ -102,7 +102,6 @@ const ChoroplethMap = () => {
 
   // Handle mouse enter to show the tooltip
   const handleMouseEnter = (geo, evt) => {
-    console.log(evt);
     const countryData = countrySentimentsRef.current.find(
       (item) => item.country === geo.properties.name
     );
@@ -134,9 +133,9 @@ const ChoroplethMap = () => {
     fetch(`/api/country-reviews?country=${encodeURIComponent(countryName)}`)
     .then((response) => response.json())
     .then((reviews) => {
-      console.log("Reviews for", countryName, reviews);
+      // console.log("Reviews for", countryName, reviews);
       setModalReviews(reviews);
-      console.log('Modal Reviews:', modalReviews);
+      // console.log('Modal Reviews:', modalReviews);
 
       // Calculate the position based on mouse click
       let newX = evt.clientX;
