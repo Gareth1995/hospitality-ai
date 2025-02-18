@@ -2,6 +2,8 @@ import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simp
 import { useEffect, useState, useRef } from "react";
 import Tooltip from "./mapTooltip";
 import ReviewModal from "./reviewTooltip";
+import { useAuth } from "../context/authContext";
+import {Spinner} from "@heroui/react";
 
 // Updated TopoJSON URL
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -25,6 +27,8 @@ const ChoroplethMap = () => {
   const countrySentimentsRef = useRef([]); // Store latest countryCounts in a ref
   const countrynumReviewsRef = useRef({});
   const [position, setPosition] = useState({ coordinates: [0, 0], zoom: 1 });
+  const { hotelId } = useAuth(); // Get hotelId from context;
+  const [loading, setLoading] = useState(true); // 🔹 Track loading state
 
   const [tooltipData, setTooltipData] = useState({
     countryName: "",
@@ -39,13 +43,44 @@ const ChoroplethMap = () => {
   const [revModalPositionY, setRevModalPositionY] = useState('50%');
   const [revModalCountry, setRevModalCountry] = useState("");
   const [modalReviews, setModalReviews] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [reviewLoading, setReviewLoading] = useState(false);
 
-  const modalRef = useRef(null); // Reference for the modal
+  // const modalRef = useRef(null); // Reference for the modal
 
-  // Fetch the country counts from the API
+  // Fetch reviews when hotelId and country are ready to use in query
   useEffect(() => {
+    if (!selectedCountry || !hotelId) return;
+
+    const fetchReviews = async () => {
+      try {
+        setReviewLoading(true);
+        const response = await fetch(
+          `/api/country-reviews?country=${encodeURIComponent(selectedCountry)}&hotelId=${hotelId}`
+        );
+        const reviews = await response.json();
+        setModalReviews(reviews);
+      } catch (error) {
+        console.error("Error fetching country reviews:", error);
+      } finally {
+        setReviewLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, [selectedCountry, hotelId]); // Runs when selectedCountry or hotelId changes
+
+  // Fetch modal sentiment for a country and number of reviews per country
+  useEffect(() => {
+
+    if (!hotelId) {
+      console.log('No hotelid for average rating fetch');
+      setLoading(false);
+      return;
+    } // nothing to fetch if hotelId is missing
+
     // fetch the modal country sentiment
-    fetch("/api/country-modal-sentiment")
+    fetch(`/api/country-modal-sentiment?hotelId=${hotelId}`)
       .then((response) => response.json())
       .then((data: { country: string; modal_sentiment?: string }[]) => {
         // console.log("fetched sentiment data:", data);
@@ -65,7 +100,7 @@ const ChoroplethMap = () => {
       .catch((error) => console.error("Error fetching country counts:", error));
 
     // fetch the number of reviews per country
-    fetch("/api/country-counts")
+    fetch(`/api/country-counts?hotelId=${hotelId}`)
       .then((response) => response.json())
       .then((data: { country: string; count?: string }[]) => {
         // console.log("fetched number review data:", data);
@@ -84,7 +119,7 @@ const ChoroplethMap = () => {
       })
       .catch((error) => console.error("Error fetching country counts:", error));
 
-  }, []);
+  }, [hotelId]);
 
   function handleZoomIn() {
     if (position.zoom >= 4) return;
@@ -128,38 +163,29 @@ const ChoroplethMap = () => {
   const handleCountryClick = (geo, evt) => {
     const countryName = geo.properties.name;
     console.log(`${countryName} has been clicked`);
+    setSelectedCountry(countryName); // Set the selected country to trigger useEffect
 
-    // Fetch detailed reviews for the clicked country
-    fetch(`/api/country-reviews?country=${encodeURIComponent(countryName)}`)
-    .then((response) => response.json())
-    .then((reviews) => {
-      // console.log("Reviews for", countryName, reviews);
-      setModalReviews(reviews);
-      // console.log('Modal Reviews:', modalReviews);
+    // Calculate the position based on mouse click
+    let newX = evt.clientX;
+    let newY = evt.clientY;
 
-      // Calculate the position based on mouse click
-      let newX = evt.clientX;
-      let newY = evt.clientY;
+    // Ensure modal stays within the right boundary of the screen
+    const modalWidth = 300; // Adjust based on your modal size
+    if (newX + modalWidth > window.innerWidth) {
+      newX = window.innerWidth - modalWidth - 10; // 10px padding from the edge
+    }
 
-      // Ensure modal stays within the right boundary of the screen
-      const modalWidth = 300; // Adjust based on your modal size
-      if (newX + modalWidth > window.innerWidth) {
-        newX = window.innerWidth - modalWidth - 10; // 10px padding from the edge
-      }
+    // Ensure modal stays within the bottom boundary of the screen
+    const modalHeight = 400; // Adjust based on your modal size
+    if (newY + modalHeight > window.innerHeight) {
+      newY = window.innerHeight - modalHeight - 10; // 10px padding from the edge
+    }
 
-      // Ensure modal stays within the bottom boundary of the screen
-      const modalHeight = 400; // Adjust based on your modal size
-      if (newY + modalHeight > window.innerHeight) {
-        newY = window.innerHeight - modalHeight - 10; // 10px padding from the edge
-      }
-
-      // Set modal position and open it
-      setRevModalCountry(countryName);
-      setRevModalPositionX(newX);
-      setRevModalPositionY(newY);
-      setIsModalOpen(true);
-    })
-    .catch((error) => console.error("Error fetching country reviews:", error));
+    // Set modal position and open it
+    setRevModalCountry(countryName);
+    setRevModalPositionX(newX);
+    setRevModalPositionY(newY);
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -213,7 +239,7 @@ const ChoroplethMap = () => {
 
       </ComposableMap>) :
       <div className="flex items-center justify-center h-full w-full">
-        <p>Loading...</p>
+        <Spinner />
       </div> }
 
       {/* Tooltip Overlay */}
@@ -236,6 +262,7 @@ const ChoroplethMap = () => {
         positionX={revModalPositionX}
         positionY={revModalPositionY}
         country={revModalCountry}
+        isLoading={reviewLoading}
       />
     </>
   );

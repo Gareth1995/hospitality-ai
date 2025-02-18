@@ -1,8 +1,9 @@
-// // export default ReviewModal;
-// // Popup component that will show up when you click a country on the map
-import React from 'react';
+// Popup component that will show up when you click a country on the map
 
-const ReviewModal = ({ reviews, isOpen, onClose, positionX = '50%', positionY = '50%', country }) => {
+import React from 'react';
+import { Spinner } from '@heroui/react';
+
+const ReviewModal = ({ reviews, isOpen, onClose, positionX = '50%', positionY = '50%', country, isLoading }) => {
   if (!isOpen) return null;
 
   return (
@@ -23,7 +24,11 @@ const ReviewModal = ({ reviews, isOpen, onClose, positionX = '50%', positionY = 
           </button>
         </div>
         <div className="max-h-96 overflow-y-auto">
-          {reviews && reviews.length > 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center items-center">
+              <Spinner />
+            </div>
+          ) : reviews && reviews.length > 0 ? (
             reviews.map((review, index) => (
               <div key={index} className="mb-4">
                 <p className="font-semibold">{review.reviewer_name}</p>
