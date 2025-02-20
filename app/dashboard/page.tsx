@@ -14,6 +14,7 @@ export default function Dashboard() {
 
     // Fetch user name and email from Kinde
     useEffect(() => {
+        console.log('fetching user data');
         const fetchUser = async () => {
             try {
                 const userRes = await fetch("/api/getKindeUser");
@@ -32,6 +33,7 @@ export default function Dashboard() {
 
     // Fetch hotel_id once username and userEmail are set
     useEffect(() => {
+        console.log('fetching hotel id');
         if (!userEmail) return; // Ensure username and email are available before fetching
 
         const fetchHotelID = async () => {

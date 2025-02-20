@@ -141,7 +141,9 @@ const ChoroplethMap = () => {
       (item) => item.country === geo.properties.name
     );
 
-    const countryName = geo.properties.name;
+    const countryName = geo.properties.name === "United States of America" 
+    ? "United States" 
+    : geo.properties.name;
     const numRevs = countrynumReviewsRef.current[countryName] || "0";
 
     setTooltipData((prev) => ({
@@ -161,7 +163,10 @@ const ChoroplethMap = () => {
 
   // handle click on country event
   const handleCountryClick = (geo, evt) => {
-    const countryName = geo.properties.name;
+    // const countryName = geo.properties.name;
+    const countryName = geo.properties.name === "United States of America" 
+    ? "United States" 
+    : geo.properties.name;
     console.log(`${countryName} has been clicked`);
     setSelectedCountry(countryName); // Set the selected country to trigger useEffect
 
@@ -209,8 +214,12 @@ const ChoroplethMap = () => {
           <Geographies geography={geoUrl}>
             {({ geographies }) =>
               geographies.map((geo) => {
+                // Modify United States name to "United States"
+                const countryName = geo.properties.name === "United States of America" 
+                ? "United States" 
+                : geo.properties.name;
                 const countryData = countrySentimentsRef.current.find(
-                  (item) => item.country === geo.properties.name
+                  (item) => item.country === countryName
                 );
                 const sentiment = countryData ? countryData.modal_sentiment : null;
                 const fillColor = colorMap[sentiment] || colorMap.null;
