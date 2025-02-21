@@ -19,7 +19,7 @@ export async function GET(request) {
     const cachedData = await redis.get(`hotel_${hotelId}_rating`);
     if (cachedData) {
       // If the data exists in Redis, return it as JSON
-      console.log('Returning data from Redis');
+      console.log('Returning average rating from Redis');
       return NextResponse.json(JSON.parse(cachedData));
     }
 
