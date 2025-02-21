@@ -1,6 +1,7 @@
 // get counts of visitors per country
 import { NextResponse } from 'next/server';
 import { pool } from '@/lib/db'; // Your DB connection pool
+import redis from '@/utils/redis'; // Import the shared Redis client
 
 export async function GET(request) {
   
@@ -13,7 +14,16 @@ export async function GET(request) {
   }
 
   try {
-    // const hotelId = 'e1ada55f-000c-4991-9527-f72362cb6e80'; // Replace with dynamic value if needed
+    
+    // Check if the data is available in Redis
+    const cachedData = await redis.get(`hotel_${hotelId}_rating`);
+    if (cachedData) {
+      // If the data exists in Redis, return it as JSON
+      console.log('Returning data from Redis');
+      return NextResponse.json(JSON.parse(cachedData));
+    }
+
+    // If not in Redis, fetch from PostgreSQL database
     const result = await pool.query(
       `SELECT hotel_id, AVG(review_rating) AS average_rating
         FROM reviews
@@ -21,6 +31,16 @@ export async function GET(request) {
         GROUP BY hotel_id`,
       [hotelId]
     );
+
+    // If the result is empty, return a 404 response
+    if (result.rows.length === 0) {
+      return NextResponse.json({ error: 'Hotel not found or no reviews available' }, { status: 404 });
+    }
+
+    // Store the fetched data in Redis with a 24-hour TTL
+    await redis.setex(`hotel_${hotelId}_rating`, 86400, JSON.stringify(result.rows));
+
+    // Return the data
     return NextResponse.json(result.rows);
 
   } catch (error) {
