@@ -25,6 +25,7 @@
     "@types/react-dom": "19.0.2",
     "autoprefixer": "10.4.20",
     "d3": "^7.9.0",
+    "d3-color": "^3.1.0",
     "eslint": "9.17.0",
     "eslint-config-next": "15.1.0",
     "framer-motion": "^12.4.2",
@@ -37,14 +38,14 @@
     "postcss": "8.4.49",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-simple-maps": "^3.0.0",
+    "react-simple-maps": "^4.0.0-beta.6",
     "recharts": "^2.15.0",
     "tailwindcss": "3.4.16",
-    "topojson": "^3.0.2",
+    "topojson-client": "^3.1.0",
+    "topojson-server": "^3.0.1",
     "typescript": "5.7.2"
   },
   "devDependencies": {
-    "@types/leaflet": "^1.9.16",
     "daisyui": "^4.12.22"
   }
 }

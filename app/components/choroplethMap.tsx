@@ -382,25 +382,6 @@ const ChoroplethMap = () => {
       .catch((error) => console.error("Error fetching country counts:", error));
   }, [hotelId]);
 
-  // const handleZoomIn = useCallback(() => {
-  //   if (position.zoom >= 4) return;
-  //   setPosition((pos) => ({ ...pos, zoom: pos.zoom * 2 }));
-  // }, [position.zoom]);
-
-  // const handleZoomOut = useCallback(() => {
-  //   if (position.zoom <= 1) return;
-  //   setPosition((pos) => ({ ...pos, zoom: pos.zoom / 2 }));
-  // }, [position.zoom]);
-
-  // function handleZoomIn() {
-  //   if (position.zoom >= 4) return;
-  //   setPosition((pos) => ({ ...pos, zoom: pos.zoom * 2 }));
-  // }
-
-  // function handleZoomOut() {
-  //   if (position.zoom <= 1) return;
-  //   setPosition((pos) => ({ ...pos, zoom: pos.zoom / 2 }));
-  // }
 
   const handleMoveEnd = useCallback((position) => {
     // Delay the update to avoid direct updates during render
