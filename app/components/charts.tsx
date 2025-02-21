@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useMemo } from "react";
 import ChoroplethMapLegend from "./legend";
+import {Spinner} from "@heroui/react";
 
 
 const Charts = () => {
@@ -21,6 +22,13 @@ const Charts = () => {
   const ModalSentiment = useMemo(() => dynamic(() => import('./modalSentiment'),
     {
         loading: () => <p>Loading</p>,
+    }
+  ), [])
+
+  // Dynamically import feedback rate
+  const FeedbackRate = useMemo(() => dynamic(() => import('./feedback_rate'),
+    {
+        loading: () => <Spinner/>,
     }
   ), [])
 
@@ -46,9 +54,8 @@ const Charts = () => {
           </div>
           <div className="flex-1 px-2 justify-center w-16  bg-[var(--card-bg-col)] shadow rounded max-h-300px">
             <div className="">
-              <p className="text-[var(--card-text-col)]">Total subscriptions</p>
-              <p className="py-4 font-bold text-[var(--card-text-col)]">$30,000 </p>
-              <p className="text-green-500">+34.5%</p>
+              <p className="text-[var(--card-text-col)]">Feedback Rate</p>
+              <div className="py-4 font-bold text-[var(--card-text-col)]"><FeedbackRate/></div>
             </div>
           </div>
         </div>

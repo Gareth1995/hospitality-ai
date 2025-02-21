@@ -124,7 +124,7 @@ const ChoroplethMap = () => {
       countryName,
       numReviews: numRevs,
       xPosition: evt.pageX + 10,
-      yPosition: evt.pageY - 150,
+      yPosition: evt.pageY - 120,
       visible: true
     }));
   };
