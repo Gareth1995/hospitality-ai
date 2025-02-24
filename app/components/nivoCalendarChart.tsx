@@ -38,13 +38,6 @@ const wrangleData = (data) => {
 const NivoCalendarChart = () => {
     const [chartData, setChartData] = useState([]); // variable to hold data from server
 
-    // Default sample data
-    // const dummyData = [
-    //     { day: '2024-12-25', value: 30 },
-    //     { day: '2024-01-01', value: 20 },
-    //     { day: '2024-02-14', value: 50 },
-    // ];
-
     // pull data and save it locally on component mount
     useEffect(() => {
         const getData = async () => {

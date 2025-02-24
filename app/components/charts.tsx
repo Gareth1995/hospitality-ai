@@ -18,6 +18,13 @@ const Charts = () => {
     }
   ), [])
 
+  // Dynamically import ratings over time chart
+  const RatingLineChart = useMemo(() => dynamic(() => import('./rating_line_chart'),
+    {
+        loading: () => <Spinner/>,
+    }
+  ), [])
+
   return (
     <>
       <section>
@@ -43,11 +50,6 @@ const Charts = () => {
         </div>
       </section>
 
-      {/* <section className="flex my-4 px-4 gap-3">
-        <div className="w-[90%] h-[500px] bg-[var(--card-bg-col)] rounded">
-          <ChoroplethMap/>
-        </div>
-      </section> */}
       {/* Map and Legend Section */}
       <section className="flex my-4 px-4 gap-3">
         <div className="flex w-full gap-3">
@@ -62,18 +64,11 @@ const Charts = () => {
         </div>
       </section>
 
-      {/* <section className="flex my-4 px-4 gap-3">
-        <div className="flex w-[75%] h-[500px] bg-[var(--card-bg-col)] rounded">
-          <ChoroplethMapLegend className="w-[300px] ml-3" />
-          <ChoroplethMap className="flex-1" />
-        </div>
-      </section> */}
-
-      
-
+          
+      {/* Rating over time line chart */}
       <section className="flex my-4 px-4 gap-3">
         <div className="w-full h-[500px] bg-[var(--card-bg-col)] rounded">
-          
+          <RatingLineChart/>
         </div>
       </section>
 
