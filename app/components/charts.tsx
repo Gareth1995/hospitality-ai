@@ -11,22 +11,8 @@ const Charts = () => {
 
   const ChoroplethMap = dynamic(() => import("./choroplethMap"), { ssr: false });
 
-  // Dynamically import average rating
-  const AvgRating = useMemo(() => dynamic(() => import('./avgRating'),
-    {
-        loading: () => <p>Loading</p>,
-    }
-  ), [])
-
-  // Dynamically import modal sentiment
-  const ModalSentiment = useMemo(() => dynamic(() => import('./modalSentiment'),
-    {
-        loading: () => <p>Loading</p>,
-    }
-  ), [])
-
   // Dynamically import feedback rate
-  const FeedbackRate = useMemo(() => dynamic(() => import('./feedback_rate'),
+  const CardDetails = useMemo(() => dynamic(() => import('./card_data'),
     {
         loading: () => <Spinner/>,
     }
@@ -39,23 +25,19 @@ const Charts = () => {
           <div className="flex-1 px-2 justify-center w-16 bg-[var(--card-bg-col)] shadow rounded h-300px">
             <div className="">
               <p className="text-[var(--card-text-col)]">Average Guest Rating</p>
-              {/* <p className="py-4 font-bold text-[var(--card-text-col)]"><AvgRating/></p> */}
-              <div className="py-4 font-bold text-[var(--card-text-col)]"><AvgRating /></div>
-              {/* <p className="text-green-500">+34.5%</p> */}
+              <div className="py-4 font-bold text-[var(--card-text-col)]"><CardDetails api_endpoint="avg-rating" datakey="average_rating"/></div>
             </div>
           </div>
           <div className="flex-1 px-2 justify-center w-16 bg-[var(--card-bg-col)] shadow rounded max-h-300px">
             <div className="">
               <p className="text-[var(--card-text-col)]">Sentiment</p>
-              {/* <p className="py-4 font-bold text-[var(card-text-col)]"> <ModalSentiment/> </p> */}
-              <div className="py-4 font-bold text-[var(--card-text-col)]"><ModalSentiment /></div>
-              {/* <p className="text-green-500">+34.5%</p> */}
+              <div className="py-4 font-bold text-[var(--card-text-col)]"><CardDetails api_endpoint="modal-sentiment" datakey="sentiment"/></div>
             </div>
           </div>
           <div className="flex-1 px-2 justify-center w-16  bg-[var(--card-bg-col)] shadow rounded max-h-300px">
             <div className="">
               <p className="text-[var(--card-text-col)]">Feedback Rate</p>
-              <div className="py-4 font-bold text-[var(--card-text-col)]"><FeedbackRate/></div>
+              <div className="py-4 font-bold text-[var(--card-text-col)]"><CardDetails api_endpoint="get-feedback-rate" datakey="feedback_rate"/></div>
             </div>
           </div>
         </div>

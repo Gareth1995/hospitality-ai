@@ -23,12 +23,11 @@ export async function GET(request) {
       return NextResponse.json(JSON.parse(cachedData));
     }
 
-    // If not in Redis, fetch from PostgreSQL database
     const result = await pool.query(
-      `SELECT hotel_id, AVG(review_rating) AS average_rating
-        FROM reviews
-        WHERE hotel_id = $1
-        GROUP BY hotel_id`,
+      `SELECT hotel_id, ROUND(AVG(review_rating), 2) AS average_rating
+       FROM reviews
+       WHERE hotel_id = $1
+       GROUP BY hotel_id`,
       [hotelId]
     );
 
