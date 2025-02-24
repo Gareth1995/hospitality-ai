@@ -25,6 +25,13 @@ const Charts = () => {
     }
   ), [])
 
+  // Dynamically import sentiment over time chart
+  const Example = useMemo(() => dynamic(() => import('./sentiment_over_time'),
+    {
+        loading: () => <Spinner/>,
+    }
+  ), [])
+
   return (
     <>
       <section>
@@ -69,6 +76,13 @@ const Charts = () => {
       <section className="flex my-4 px-4 gap-3">
         <div className="w-full h-[500px] bg-[var(--card-bg-col)] rounded">
           <RatingLineChart/>
+        </div>
+      </section>
+
+      {/* Sentiment over time line chart */}
+      <section className="flex my-4 px-4 gap-3">
+        <div className="w-full h-[500px] bg-[var(--card-bg-col)] rounded">
+          <Example/>
         </div>
       </section>
 

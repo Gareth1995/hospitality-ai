@@ -44,27 +44,30 @@ const RatingLineChart = () => {
         : [];
 
     return (
-        <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={ratingOvertimeData} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis domain={[3.5, 10]} />
-                <Tooltip />
-                <Legend />
-                {/* {years.map((year, index) => (
-                <Line key={year} type="monotone" dataKey={year} stroke={['#8884d8', '#82ca9d', '#ff7300'][index % 3]} strokeWidth={2} />
-                ))} */}
-                {years.map((year, index) => (
-                    <Line
-                        key={year}
-                        type="monotone"
-                        dataKey={year}
-                        stroke={['#8884d8', '#82ca9d', '#ff7300'][index % 3]}
-                        strokeWidth={2}
-                    />
-                ))}
-            </LineChart>
-        </ResponsiveContainer>
+        <div>
+        <h2 className="text-xl font-bold text-center mb-4">Hotel Ratings Over Time</h2> 
+            <ResponsiveContainer width="100%" height={400}>
+                <LineChart data={ratingOvertimeData} margin={{ top: 20, right: 30, left: 20, bottom: 10 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis domain={[3.5, 10]} />
+                    <Tooltip />
+                    <Legend />
+                    {/* {years.map((year, index) => (
+                    <Line key={year} type="monotone" dataKey={year} stroke={['#8884d8', '#82ca9d', '#ff7300'][index % 3]} strokeWidth={2} />
+                    ))} */}
+                    {years.map((year, index) => (
+                        <Line
+                            key={year}
+                            type="monotone"
+                            dataKey={year}
+                            stroke={['#8884d8', '#82ca9d', '#ff7300'][index % 3]}
+                            strokeWidth={2}
+                        />
+                    ))}
+                </LineChart>
+            </ResponsiveContainer>
+        </div>
     );
 }
 
