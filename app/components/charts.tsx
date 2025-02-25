@@ -26,7 +26,7 @@ const Charts = () => {
   ), [])
 
   // Dynamically import sentiment over time chart
-  const SentimentScatterChart = useMemo(() => dynamic(() => import('./sentiment_over_time'),
+  const RoomTypeSentiment = useMemo(() => dynamic(() => import('./room_type_sentiment'),
     {
         loading: () => <Spinner/>,
     }
@@ -79,23 +79,20 @@ const Charts = () => {
         </div>
       </section>
 
-      {/* Sentiment over time line chart */}
-      <section className="flex my-4 px-4 gap-3">
-        <div className="w-full h-[500px] bg-[var(--card-bg-col)] rounded">
-          <SentimentScatterChart/>
-        </div>
-      </section>
-
       <section className="flex my-4 px-4 gap-2">
-        <div className=" w-1/2 h-[250px] bg-[var(--card-bg-col)] rounded">
-          {/* <DemographicsChart/>         */}
+        <div className=" w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded">
+          <RoomTypeSentiment/>
         </div>
-        <div className=" w-1/2 h-[250px] bg-[var(--card-bg-col)] rounded"></div>
+        <div className=" w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded">
+          {/* <RoomTypeSentiment/> */}
+        </div>
       </section>
 
-      <section className="flex my-4 px-4 gap-2 justify-center">
-        <div className=" w-1/2 h-[250px] bg-[var(--card-bg-col)] rounded"></div>
-      </section>
+      {/* <section className="flex my-4 px-4 gap-2 justify-center">
+        <div className=" w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded">
+          <RoomTypeSentiment/>
+        </div>
+      </section> */}
     </>
   );
 };
