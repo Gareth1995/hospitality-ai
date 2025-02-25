@@ -44,7 +44,6 @@ export async function GET(request) {
     await redis.setex(cacheKey, 86400, JSON.stringify(result.rows));
 
     // Return the result
-    console.log(result.rows);
     return NextResponse.json(result.rows);
 
   } catch (error) {

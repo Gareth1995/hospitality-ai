@@ -18,7 +18,7 @@ export async function GET(request) {
     const cachedData = await redis.get(cacheKey);
 
     if (cachedData) {
-      console.log('Returning check-in ratings from Redis', cachedData);
+      // console.log('Returning check-in ratings from Redis', cachedData);
       return NextResponse.json(JSON.parse(cachedData));
     }
 
