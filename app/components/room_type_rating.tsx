@@ -8,14 +8,12 @@ import {
     YAxis, 
     CartesianGrid, 
     Tooltip, 
-    Legend, 
     ResponsiveContainer, 
     Rectangle
 } from "recharts";
 import { useAuth } from "../context/authContext";
-import { color } from "d3-color";
 
-const RoomTypeSentiment: React.FC = () => {
+const RoomTypeRating: React.FC = () => {
     const { hotelId } = useAuth();
     const [ratingByRoom, setRatingByRoom] = useState([]);
 
@@ -61,13 +59,13 @@ const RoomTypeSentiment: React.FC = () => {
                     tick={({ x, y, payload }) => {
                         
                         const text = payload.value;
-                        const chunkSize = 10;
+                        const chunkSize = 20;
                         
                         // Split text into chunks of 10 characters
                         const chunks = text.match(new RegExp(`.{1,${chunkSize}}`, "g")) || [];
 
                         return (
-                            <text x={x} y={y} textAnchor="middle" fontSize={15} fill="grey">
+                            <text x={x} y={y} textAnchor="middle" fontSize={12} fill="grey">
                                 {chunks.map((chunk, index) => (
                                     <tspan x={x} dy={15} key={index}>{chunk}</tspan>
                                 ))}
@@ -84,11 +82,16 @@ const RoomTypeSentiment: React.FC = () => {
                     style: { textAnchor: "middle", fontSize: 16 } 
                     
                 }}/>
-                <Tooltip />
+                <Tooltip formatter={(value, name) => {
+                    if (name === "average_rating") {
+                        return [value, "Average Rating"]; // Change the label
+                    }
+                    return [value, name]; // Default case
+                }} />
                 <Bar dataKey="average_rating" fill="#8884d8" activeBar={<Rectangle stroke="blue" />} />
             </BarChart>
         </ResponsiveContainer>
     );
 };
 
-export default RoomTypeSentiment;
+export default RoomTypeRating;

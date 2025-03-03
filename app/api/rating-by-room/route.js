@@ -22,19 +22,6 @@ export async function GET(request) {
       return NextResponse.json(JSON.parse(cachedData));
     }
 
-    // Query to get the average rating per check-in date
-    // const result = await pool.query(
-    //     `SELECT
-    //         apartment_type AS name, 
-    //         ROUND(AVG(review_rating), 2) AS average_rating
-    //         FROM reviews
-    //         WHERE hotel_id = $1 
-    //         AND review_rating IS NOT NULL
-    //         GROUP BY apartment_type
-    //         ORDER BY apartment_type;`,
-    //     [hotelId]
-    // );
-
     const result = await pool.query(
         `SELECT
             REPLACE(apartment_type, '-', '') AS name, 
@@ -46,7 +33,6 @@ export async function GET(request) {
         ORDER BY name;`,
         [hotelId]
     );    
-    
 
     // If no data is found, return a 404 response
     if (result.rows.length === 0) {

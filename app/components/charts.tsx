@@ -25,8 +25,15 @@ const Charts = () => {
     }
   ), [])
 
+  // Dynamically import ratings over time chart
+  const RoomTypeRating = useMemo(() => dynamic(() => import('./room_type_rating'),
+    {
+        loading: () => <Spinner/>,
+    }
+  ), [])
+
   // Dynamically import sentiment over time chart
-  const RoomTypeSentiment = useMemo(() => dynamic(() => import('./room_type_sentiment'),
+  const GroupTypeRating = useMemo(() => dynamic(() => import('./group_type_rating'),
     {
         loading: () => <Spinner/>,
     }
@@ -81,10 +88,10 @@ const Charts = () => {
 
       <section className="flex my-4 px-4 gap-2">
         <div className=" w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded text-[var(--card-text-col)]">
-          <RoomTypeSentiment/>
+          <RoomTypeRating/>
         </div>
         <div className=" w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded">
-          {/* <RoomTypeSentiment/> */}
+          <GroupTypeRating/>
         </div>
       </section>
 
