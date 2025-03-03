@@ -80,7 +80,7 @@ const Charts = () => {
       </section>
 
       <section className="flex my-4 px-4 gap-2">
-        <div className=" w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded">
+        <div className=" w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded text-[var(--card-text-col)]">
           <RoomTypeSentiment/>
         </div>
         <div className=" w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded">

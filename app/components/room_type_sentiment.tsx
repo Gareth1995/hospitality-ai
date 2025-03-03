@@ -1,6 +1,6 @@
 'use client';
 
-import React, { use, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 import { 
     BarChart, 
     Bar, 
@@ -13,6 +13,7 @@ import {
     Rectangle
 } from "recharts";
 import { useAuth } from "../context/authContext";
+import { color } from "d3-color";
 
 const RoomTypeSentiment: React.FC = () => {
     const { hotelId } = useAuth();
@@ -49,7 +50,7 @@ const RoomTypeSentiment: React.FC = () => {
     }, [ratingByRoom]);
 
     return (
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={400} >
             <BarChart
                 data={ratingByRoom}
                 margin={{ top: 20, right: 30, left: 40, bottom: 60 }}
@@ -58,6 +59,7 @@ const RoomTypeSentiment: React.FC = () => {
                 <XAxis 
                     dataKey="name" 
                     tick={({ x, y, payload }) => {
+                        
                         const text = payload.value;
                         const chunkSize = 10;
                         
@@ -65,19 +67,25 @@ const RoomTypeSentiment: React.FC = () => {
                         const chunks = text.match(new RegExp(`.{1,${chunkSize}}`, "g")) || [];
 
                         return (
-                            <text x={x} y={y} textAnchor="middle" fontSize={15}>
+                            <text x={x} y={y} textAnchor="middle" fontSize={15} fill="grey">
                                 {chunks.map((chunk, index) => (
                                     <tspan x={x} dy={15} key={index}>{chunk}</tspan>
                                 ))}
                             </text>
                         );
-                    }} 
+                    } } 
+                    interval={0}
                 />
 
-                <YAxis />
+                <YAxis label={{ 
+                    value: "Average Rating", 
+                    angle: -90, 
+                    position: "insideLeft", 
+                    style: { textAnchor: "middle", fontSize: 16 } 
+                    
+                }}/>
                 <Tooltip />
-                <Legend />
-                <Bar dataKey="average_rating" fill="#8884d8" activeBar={<Rectangle fill="pink" stroke="blue" />} />
+                <Bar dataKey="average_rating" fill="#8884d8" activeBar={<Rectangle stroke="blue" />} />
             </BarChart>
         </ResponsiveContainer>
     );
