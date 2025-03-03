@@ -17,7 +17,8 @@ export function ApiHandler(redisCacheKey, sqlCommand) {
         }
 
         try {
-            console.log(`cached key: ${redisCacheKey}_${hotelId}`)
+            const redisKey = `${redisCacheKey}_${hotelId}`;
+            console.log('cached key: redisKey');
             // Check if the data is available in Redis
             const cachedData = await redis.get(`${redisCacheKey}_${hotelId}`);
 
@@ -35,7 +36,7 @@ export function ApiHandler(redisCacheKey, sqlCommand) {
             }
 
             // Store the result in Redis with a 24-hour TTL
-            await redis.setex(redisCacheKey, 86400, JSON.stringify(result.rows));
+            await redis.setex(redisKey, 86400, JSON.stringify(result.rows));
 
             // Return the result
             console.log(result.rows);

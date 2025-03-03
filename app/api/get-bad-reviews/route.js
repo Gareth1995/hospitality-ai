@@ -5,7 +5,7 @@ const redisCacheKey = "bad_reviews";
 const sqlCommand = `SELECT positive_review, negative_review, review_rating, reviewer_name, sentiment
                     FROM reviews
                     WHERE hotel_id = $1
-                    AND sentiment IN ('anger', 'fear', 'disgust', 'sadness')
-                    AND (review_feedback IS NULL OR review_feedback = '')`;
+                    AND seen = FALSE
+                    AND sentiment IN ('anger', 'fear', 'disgust', 'sadness')`;
 
 export const GET = ApiHandler(redisCacheKey, sqlCommand);
