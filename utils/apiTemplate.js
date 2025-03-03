@@ -7,7 +7,8 @@ import redis from '@/utils/redis'; // Import the shared Redis client
 export function ApiHandler(redisCacheKey, sqlCommand) {
 
     return async function GET(request) {
-    
+        
+        console.log('THIS IS THE API HANDLER BEING HIT', request.nextUrl);
         // Get hotelId from query parameters
         const hotelId = request.nextUrl.searchParams.get('hotelId');
 
@@ -16,9 +17,9 @@ export function ApiHandler(redisCacheKey, sqlCommand) {
         }
 
         try {
-            console.log(`cached key: ${redisCacheKey}:${hotelId}`)
+            console.log(`cached key: ${redisCacheKey}_${hotelId}`)
             // Check if the data is available in Redis
-            const cachedData = await redis.get(`${redisCacheKey}:${hotelId}`);
+            const cachedData = await redis.get(`${redisCacheKey}_${hotelId}`);
 
             if (cachedData) {
             // console.log('Returning check-in ratings from Redis', cachedData);

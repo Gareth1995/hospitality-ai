@@ -1,7 +1,6 @@
 'use client';
 import AlertTable from '../components/alerts_table';
 import NavButtons from '../components/navButtons';
-import Charts from '../components/charts';
 import ThemeToggle from '../components/toggle';
 
 export default function Alerts() {

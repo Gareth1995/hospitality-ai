@@ -1,6 +1,5 @@
 'use client';
 
-import Sidebar from '../components/sidebar';
 import NavButtons from '../components/navButtons';
 import Charts from '../components/charts';
 import ThemeToggle from '../components/toggle';
@@ -8,7 +7,6 @@ import { useAuth } from "../context/authContext";
 import { useEffect, useState } from 'react';
 
 export default function Dashboard() {
-    const [isLoading, setIsLoading] = useState(false);
     const [userEmail, setUserEmail] = useState("");
     const { hotelId, setHotelId } = useAuth();
 
