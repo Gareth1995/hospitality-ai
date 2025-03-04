@@ -8,49 +8,21 @@ import {
     TableBody,
     TableRow,
     TableCell,
-    Tooltip,
+    Tooltip
 } from "@heroui/react";
 import { useAuth } from "../context/authContext";
 
+// column headers for table
 export const columns = [
     { name: "NAME", uid: "reviewer_name" },
     { name: "NEGATIVE REVIEW", uid: "negative_review" },
     { name: "SENTIMENT", uid: "sentiment" },
     { name: "RATING", uid: "review_rating" },
+    { name: "SOURCE", uid: "source_name" },
     { name: "ACTIONS", uid: "actions" }
 ];
 
-
-export const EyeIcon = (props) => {
-    return (
-        <svg
-            aria-hidden="true"
-            fill="none"
-            focusable="false"
-            height="1em"
-            role="presentation"
-            viewBox="0 0 20 20"
-            width="1em"
-            {...props}
-        >
-            <path
-                d="M12.9833 10C12.9833 11.65 11.65 12.9833 10 12.9833C8.35 12.9833 7.01666 11.65 7.01666 10C7.01666 8.35 8.35 7.01666 10 7.01666C11.65 7.01666 12.9833 8.35 12.9833 10Z"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-            />
-            <path
-                d="M9.99999 16.8916C12.9417 16.8916 15.6833 15.1583 17.5917 12.1583C18.3417 10.9833 18.3417 9.00831 17.5917 7.83331C15.6833 4.83331 12.9417 3.09998 9.99999 3.09998C7.05833 3.09998 4.31666 4.83331 2.40833 7.83331C1.65833 9.00831 1.65833 10.9833 2.40833 12.1583C4.31666 15.1583 7.05833 16.8916 9.99999 16.8916Z"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-            />
-        </svg>
-    );
-};
-
+// delete icon on table
 export const DeleteIcon = (props) => {
     return (
         <svg
@@ -106,6 +78,37 @@ export default function AlertTable() {
     const { hotelId } = useAuth();
     const [badReviews, setBadReviews] = useState([]);
 
+    // Send update request to table to change seen to true when delete button sis clicked
+    const handleDelete = async (review) => {
+        try {
+            const response = await fetch("/api/update-seen", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    hotelId,
+                    reviewer_name: review.reviewer_name,
+                    negative_review: review.negative_review,
+                    sentiment: review.sentiment
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Failed to update review status");
+            }
+    
+            // Remove updated review from state
+            setBadReviews(prev => prev.filter(r =>
+                !(r.reviewer_name === review.reviewer_name &&
+                  r.negative_review === review.negative_review &&
+                  r.sentiment === review.sentiment)
+            ));
+    
+        } catch (error) {
+            console.error("Error updating review status:", error);
+        }
+    };
+
+    // effect to fetch bad reviews
     useEffect(() => {
         if (!hotelId) {
             // console.log(`No hotelId for fetching bad reviews`);
@@ -131,13 +134,7 @@ export default function AlertTable() {
 
     }, [hotelId]);
 
-    // useEffect(() => {
-
-    //     return () => {
-    //         console.log(badReviews);
-    //     }
-    // }, [badReviews])
-
+    // code to render each bad review cell in the table
     const renderCell = React.useCallback((user, columnKey) => {
         const cellValue = user[columnKey];
 
@@ -146,19 +143,22 @@ export default function AlertTable() {
                 return (
                     <div className="relative flex items-center gap-2">
                         <Tooltip color="danger" content="Delete">
-                            <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                                <DeleteIcon />
-                            </span>
+                            <button onClick={() => handleDelete(user)}>
+                                <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                                    <DeleteIcon />
+                                </span>
+                            </button>
                         </Tooltip>
                     </div>
                 );
             default:
                 return cellValue;
         }
-    }, []);
+    }, [hotelId]);
 
     return (
-        <Table aria-label="Example table with custom cells">
+        // returning rechart table
+        <Table aria-label="Bad review table">
             <TableHeader columns={columns}>
                 {(column) => (
                     <TableColumn key={column.uid} align={column.uid === "sentiment" ? "center" : "start"}>
@@ -175,4 +175,4 @@ export default function AlertTable() {
             </TableBody>
         </Table>
     );
-}
+};

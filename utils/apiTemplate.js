@@ -8,7 +8,7 @@ export function ApiHandler(redisCacheKey, sqlCommand) {
 
     return async function GET(request) {
         
-        console.log('THIS IS THE API HANDLER BEING HIT', request.nextUrl);
+        // console.log('THIS IS THE API HANDLER BEING HIT', request.nextUrl);
         // Get hotelId from query parameters
         const hotelId = request.nextUrl.searchParams.get('hotelId');
 
