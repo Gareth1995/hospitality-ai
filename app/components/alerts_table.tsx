@@ -80,6 +80,9 @@ export default function AlertTable() {
 
     // Send update request to table to change seen to true when delete button sis clicked
     const handleDelete = async (review) => {
+        const isConfirmed = window.confirm("Are you sure you want to delete this review?");
+        if (!isConfirmed) return;
+        
         try {
             const response = await fetch("/api/update-seen", {
                 method: "PUT",
