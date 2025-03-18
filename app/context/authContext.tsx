@@ -10,24 +10,10 @@ export const useAuth = () => {
 
 export const HotelIDProvider = ({ children }) => {
   const [hotelId, setHotelId] = useState<string | null>(null);
-
-  useEffect(() => {
-    // get hotel ID in local storage
-    const storedHotelId = localStorage.getItem("hotelId");
-    if (storedHotelId) {
-      setHotelId(storedHotelId);
-    }
-  }, []);
-
-  const updateHotelId = (id) => {
-    setHotelId(id);
-    console.log('storing hotel ID in local storage');
-    localStorage.setItem("hotelId", id); // store hotel_id in local storage
-  };
-  
+  const [hotelName, setHotelName] = useState<string | null>(null);
 
   return (
-    <HotelContext.Provider value={{ hotelId, setHotelId: updateHotelId }}>
+    <HotelContext.Provider value={{ hotelId, setHotelId, hotelName, setHotelName }}>
       {children}
     </HotelContext.Provider>
   );

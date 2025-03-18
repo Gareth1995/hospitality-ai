@@ -3,7 +3,7 @@ import { pool } from '@/lib/db'; // Your DB connection pool
 
 export async function GET() {
   try {
-    const result = await pool.query('SELECT DISTINCT name FROM hotels');
+    const result = await pool.query('SELECT DISTINCT hotel_name, hotel_id FROM reviews');
     
     if (result.rows.length === 0) {
       return NextResponse.json({ error: 'No hotels found' }, { status: 404 });
