@@ -17,15 +17,15 @@ export function ApiHandler(redisCacheKey, sqlCommand) {
         }
 
         try {
-            const redisKey = `${redisCacheKey}_${hotelId}`;
-            console.log('cached key: redisKey');
-            // Check if the data is available in Redis
-            const cachedData = await redis.get(`${redisCacheKey}_${hotelId}`);
+            // const redisKey = `${redisCacheKey}_${hotelId}`;
+            // // console.log('cached key: redisKey');
+            // // Check if the data is available in Redis
+            // const cachedData = await redis.get(`${redisCacheKey}_${hotelId}`);
 
-            if (cachedData) {
-            // console.log('Returning check-in ratings from Redis', cachedData);
-            return NextResponse.json(JSON.parse(cachedData));
-            }
+            // if (cachedData) {
+            // // console.log('Returning check-in ratings from Redis', cachedData);
+            // return NextResponse.json(JSON.parse(cachedData));
+            // }
 
             const result = await pool.query(sqlCommand, [hotelId]);    
 
@@ -36,10 +36,10 @@ export function ApiHandler(redisCacheKey, sqlCommand) {
             }
 
             // Store the result in Redis with a 24-hour TTL
-            await redis.setex(redisKey, 86400, JSON.stringify(result.rows));
+            // await redis.setex(redisKey, 86400, JSON.stringify(result.rows));
 
             // Return the result
-            console.log(result.rows);
+            // console.log(result.rows);
             return NextResponse.json(result.rows);
 
         } catch (error) {

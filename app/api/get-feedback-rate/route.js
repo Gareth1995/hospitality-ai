@@ -16,12 +16,12 @@ export async function GET(request) {
   try {
     
     // Check if the data is available in Redis
-    const cachedData = await redis.get(`hotel_${hotelId}_feedback_rate`);
-    if (cachedData) {
-      // If the data exists in Redis, return it as JSON
-      console.log('Returning average rating from Redis');
-      return NextResponse.json(JSON.parse(cachedData));
-    }
+    // const cachedData = await redis.get(`hotel_${hotelId}_feedback_rate`);
+    // if (cachedData) {
+    //   // If the data exists in Redis, return it as JSON
+    //   console.log('Returning average rating from Redis');
+    //   return NextResponse.json(JSON.parse(cachedData));
+    // }
 
     // If not in Redis, fetch from PostgreSQL database
     const result = await pool.query(
@@ -44,7 +44,7 @@ export async function GET(request) {
     }
 
     // Store the fetched data in Redis with a 24-hour TTL
-    await redis.setex(`hotel_${hotelId}_feedback_rate`, 86400, JSON.stringify(result.rows));
+    // await redis.setex(`hotel_${hotelId}_feedback_rate`, 86400, JSON.stringify(result.rows));
 
     // Return the data
     return NextResponse.json(result.rows);

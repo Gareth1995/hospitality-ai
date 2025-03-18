@@ -15,12 +15,12 @@ export async function GET(req) {
   try {
 
     // Check if the data is available in Redis
-    const cachedData = await redis.get(`hotel_${hotelId}_country_modal_sentiment`);
-    if (cachedData) {
-      // If the data exists in Redis, return it as JSON
-      console.log('Returning country modal sentiment data from Redis');
-      return NextResponse.json(JSON.parse(cachedData));
-    }    
+    // const cachedData = await redis.get(`hotel_${hotelId}_country_modal_sentiment`);
+    // if (cachedData) {
+    //   // If the data exists in Redis, return it as JSON
+    //   console.log('Returning country modal sentiment data from Redis');
+    //   return NextResponse.json(JSON.parse(cachedData));
+    // }    
 
     // If not in Redis, fetch from PostgreSQL database
     const result = await pool.query(`
@@ -37,7 +37,7 @@ export async function GET(req) {
     }
 
     // Store the fetched data in Redis with a 24-hour TTL
-    await redis.setex(`hotel_${hotelId}_country_modal_sentiment`, 86400, JSON.stringify(result.rows));
+    // await redis.setex(`hotel_${hotelId}_country_modal_sentiment`, 86400, JSON.stringify(result.rows));
 
     // return data
     return NextResponse.json(result.rows);

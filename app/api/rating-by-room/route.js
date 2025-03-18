@@ -14,13 +14,13 @@ export async function GET(request) {
 
   try {
     // Check if the data is available in Redis
-    const cacheKey = `hotel_${hotelId}_rating_by_room`;
-    const cachedData = await redis.get(cacheKey);
+    // const cacheKey = `hotel_${hotelId}_rating_by_room`;
+    // const cachedData = await redis.get(cacheKey);
 
-    if (cachedData) {
-      // console.log('Returning check-in ratings from Redis', cachedData);
-      return NextResponse.json(JSON.parse(cachedData));
-    }
+    // if (cachedData) {
+    //   // console.log('Returning check-in ratings from Redis', cachedData);
+    //   return NextResponse.json(JSON.parse(cachedData));
+    // }
 
     const result = await pool.query(
         `SELECT
@@ -40,7 +40,7 @@ export async function GET(request) {
     }
 
     // Store the result in Redis with a 24-hour TTL
-    await redis.setex(cacheKey, 86400, JSON.stringify(result.rows));
+    // await redis.setex(cacheKey, 86400, JSON.stringify(result.rows));
 
     // Return the result
     console.log(result.rows);

@@ -17,12 +17,12 @@ export async function GET(req) {
   try {
 
     // Check if the data is available in Redis
-    const cachedData = await redis.get(`hotel_${hotelId}_reviews_by_country_${country}`);
-    if (cachedData) {
-      // If the data exists in Redis, return it as JSON
-      console.log('Returning reviews by country from Redis');
-      return NextResponse.json(JSON.parse(cachedData));
-    }
+    // const cachedData = await redis.get(`hotel_${hotelId}_reviews_by_country_${country}`);
+    // if (cachedData) {
+    //   // If the data exists in Redis, return it as JSON
+    //   console.log('Returning reviews by country from Redis');
+    //   return NextResponse.json(JSON.parse(cachedData));
+    // }
 
     // If not in Redis, fetch from PostgreSQL database
     const result = await pool.query(
@@ -36,7 +36,7 @@ export async function GET(req) {
     }
 
     // Store the fetched data in Redis with a 24-hour TTL
-    await redis.setex(`hotel_${hotelId}_reviews_by_country_${country}`, 86400, JSON.stringify(result.rows));
+    // await redis.setex(`hotel_${hotelId}_reviews_by_country_${country}`, 86400, JSON.stringify(result.rows));
 
     // Return the data
     return NextResponse.json(result.rows);
