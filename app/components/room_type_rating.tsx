@@ -65,11 +65,24 @@ const RoomTypeRating: React.FC = () => {
                         const chunks = text.match(new RegExp(`.{1,${chunkSize}}`, "g")) || [];
 
                         return (
-                            <text x={x} y={y} textAnchor="middle" fontSize={12} fill="grey">
-                                {chunks.map((chunk, index) => (
-                                    <tspan x={x} dy={15} key={index}>{chunk}</tspan>
-                                ))}
-                            </text>
+                            // <text x={x} y={y} textAnchor="middle" fontSize={12} fill="grey">
+                            //     {chunks.map((chunk, index) => (
+                            //         <tspan x={x} dy={15} key={index}>{chunk}</tspan>
+                            //     ))}
+                            // </text>
+                            <g transform={`translate(${x},${y})`}>
+                                <text 
+                                    textAnchor="end" 
+                                    fontSize={12} 
+                                    fill="grey"
+                                    transform="rotate(-45)" // Rotates the text by -45 degrees
+                                    textLength={90}
+                                    lengthAdjust={'spacingAndGlyphs'}
+                                >
+                                    {payload.value}
+                                    
+                                </text>
+                            </g>
                         );
                     } } 
                     interval={0}

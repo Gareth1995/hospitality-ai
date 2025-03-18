@@ -41,7 +41,7 @@ const Charts = () => {
 
   return (
     <>
-      <section>
+      {/* <section>
         <div className="flex m-4 gap-2">
           <div className="flex-1 px-2 justify-center w-16 bg-[var(--card-bg-col)] shadow rounded h-300px">
             <div className="">
@@ -62,6 +62,31 @@ const Charts = () => {
             </div>
           </div>
         </div>
+      </section> */}
+
+      
+
+      <section>
+        <div className="flex m-4 gap-2">
+          <div className="flex-1 px-2 justify-center w-16 bg-[var(--card-bg-col)] shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl p-4 backdrop-blur-lg border border-[var(--border-col)] translate-y-1">
+            <p className="text-[var(--card-text-col)]">Average Guest Rating</p>
+            <div className="py-4 font-bold text-[var(--card-text-col)]">
+              <CardDetails api_endpoint="avg-rating" datakey="average_rating"/>
+            </div>
+          </div>
+          <div className="flex-1 px-2 justify-center w-16 bg-[var(--card-bg-col)] shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl p-4 backdrop-blur-lg border border-[var(--border-col)] translate-y-1">
+            <p className="text-[var(--card-text-col)]">Sentiment</p>
+            <div className="py-4 font-bold text-[var(--card-text-col)]">
+              <CardDetails api_endpoint="modal-sentiment" datakey="sentiment"/>
+            </div>
+          </div>
+          <div className="flex-1 px-2 justify-center w-16 bg-[var(--card-bg-col)] shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl p-4 backdrop-blur-lg border border-[var(--border-col)] translate-y-1">
+            <p className="text-[var(--card-text-col)]">Feedback Rate</p>
+            <div className="py-4 font-bold text-[var(--card-text-col)]">
+              <CardDetails api_endpoint="get-feedback-rate" datakey="feedback_rate"/>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Map and Legend Section */}
@@ -70,6 +95,7 @@ const Charts = () => {
           {/* Map Container */}
           <div className="relative flex-1 h-[500px] bg-[var(--card-bg-col)]">
             <ChoroplethMap />
+
             {/* Legend positioned at the bottom-left of the map */}
             <div className="absolute bottom-0 left-0 p-4">
               <ChoroplethMapLegend />
@@ -78,28 +104,40 @@ const Charts = () => {
         </div>
       </section>
 
+
           
       {/* Rating over time line chart */}
-      <section className="flex my-4 px-4 gap-3">
+      {/* <section className="flex my-4 px-4 gap-3">
         <div className="w-full h-[500px] bg-[var(--card-bg-col)] rounded">
           <RatingLineChart/>
         </div>
       </section>
 
+
       <section className="flex my-4 px-4 gap-2">
-        <div className=" w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded text-[var(--card-text-col)]">
-          <RoomTypeRating/>
+        <div className="w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded-lg text-[var(--card-text-col)] shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <RoomTypeRating />
         </div>
-        <div className=" w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded">
-          <GroupTypeRating/>
+        <div className="w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <GroupTypeRating />
+        </div>
+      </section> */}
+
+      
+      <section className="flex my-4 px-4 gap-3">
+        <div className="w-full h-[500px] bg-[var(--card-bg-col)] rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 p-4 backdrop-blur-lg border border-[var(--border-col)] translate-y-1">
+          <RatingLineChart />
         </div>
       </section>
 
-      {/* <section className="flex my-4 px-4 gap-2 justify-center">
-        <div className=" w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded">
-          <RoomTypeSentiment/>
+      <section className="flex my-4 px-4 gap-2">
+        <div className="w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 p-4 backdrop-blur-lg border border-[var(--border-col)] translate-y-1">
+          <RoomTypeRating />
         </div>
-      </section> */}
+        <div className="w-1/2 h-[400px] bg-[var(--card-bg-col)] rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 p-4 backdrop-blur-lg border border-[var(--border-col)] translate-y-1">
+          <GroupTypeRating />
+        </div>
+      </section>
     </>
   );
 };
