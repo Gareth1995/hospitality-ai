@@ -21,7 +21,11 @@ const RatingLineChart = () => {
             const data = await response.json(); // Parse JSON response
             return data;
         } catch (err) {
-            console.log(err.message); // Handle errors
+            if (err instanceof Error) {
+                console.log(err.message); // Handle errors
+            } else {
+                console.log('An unknown error occurred'); // Handle unknown errors
+            }
             return [];
         }
     };

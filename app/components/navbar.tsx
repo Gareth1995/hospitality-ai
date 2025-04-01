@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/authContext";
 
+interface Hotel {
+  hotel_id: string; // or number, depending on your data
+  hotel_name: string;
+}
+
 const Navbar = () => {
-  const [hotelNames, setHotelNames] = useState([]);
+  const [hotelNames, setHotelNames] = useState<Hotel[]>([]);
   const { hotelId, setHotelId, setHotelName } = useAuth();
 
   // call fetch to query postgres database for all unique hotel names
@@ -33,7 +38,7 @@ const Navbar = () => {
     fetchHotelNames();
   }, [])
 
-  const handleHotelChange = (event) => {
+  const handleHotelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setHotelId(event.target.value);
     setHotelName(event.target.selectedOptions[0].text);
   }

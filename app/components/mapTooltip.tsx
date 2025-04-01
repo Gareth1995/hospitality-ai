@@ -2,7 +2,14 @@
 
 import React from "react";
 
-const Tooltip = ({ countryName, numReviews, xPosition, yPosition }) => {
+interface TooltipProps {
+  countryName: string;
+  numReviews: number;
+  xPosition: number;
+  yPosition: number;
+}
+
+const Tooltip: React.FC<TooltipProps> = ({ countryName, numReviews, xPosition, yPosition }) => {
   if (!countryName) return null; // Don't render if no country is selected
 
   return (

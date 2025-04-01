@@ -68,7 +68,10 @@ const GroupTypeRating: React.FC = () => {
 
                         return (
                             <text x={x} y={y} textAnchor="middle" fontSize={12} fill="grey">
-                                {chunks.map((chunk, index) => (
+                                {/* {chunks.map((chunk, index) => (
+                                    <tspan x={x} dy={15} key={index}>{chunk}</tspan>
+                                ))} */}
+                                {chunks.map((chunk: string, index: number) => ( // Explicitly define types
                                     <tspan x={x} dy={15} key={index}>{chunk}</tspan>
                                 ))}
                             </text>

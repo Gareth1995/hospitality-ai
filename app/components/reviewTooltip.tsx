@@ -3,7 +3,17 @@
 import React from 'react';
 import { Spinner } from '@heroui/react';
 
-const ReviewModal = ({ reviews, isOpen, onClose, positionX = '50%', positionY = '50%', country, isLoading }) => {
+interface ReviewModalProps {
+  reviews: string[]; // Adjust to match actual type (e.g., `any[]`, `Review[]`, etc.)
+  isOpen: boolean;
+  onClose: () => void;
+  positionX?: string;
+  positionY?: string;
+  country?: string;
+  isLoading?: boolean;
+}
+
+const ReviewModal: React.FC<ReviewModalProps> = ({ reviews, isOpen, onClose, positionX = '50%', positionY = '50%', country, isLoading }) => {
   if (!isOpen) return null;
 
   return (
