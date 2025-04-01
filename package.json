@@ -46,6 +46,7 @@
     "typescript": "5.7.2"
   },
   "devDependencies": {
+    "@types/react-simple-maps": "^3.0.6",
     "daisyui": "^4.12.22"
   }
 }

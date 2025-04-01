@@ -1,14 +1,30 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
-const HotelContext = createContext({});
+interface HotelContextType {
+  hotelId: string | null;
+  setHotelId: (id: string | null) => void;
+  hotelName: string | null;
+  setHotelName: (name: string | null) => void;
+}
 
-export const useAuth = () => {
-    return useContext(HotelContext);
+// Provide default values to avoid errors
+const HotelContext = createContext<HotelContextType | undefined>(undefined);
+
+export const useAuth = (): HotelContextType => {
+  const context = useContext(HotelContext);
+  if (!context) {
+    throw new Error("useAuth must be used within a HotelIDProvider");
+  }
+  return context;
 };
 
-export const HotelIDProvider = ({ children }) => {
+interface HotelIDProviderProps {
+  children: ReactNode;
+}
+
+export const HotelIDProvider: React.FC<HotelIDProviderProps> = ({ children }) => {
   const [hotelId, setHotelId] = useState<string | null>(null);
   const [hotelName, setHotelName] = useState<string | null>(null);
 
@@ -18,5 +34,3 @@ export const HotelIDProvider = ({ children }) => {
     </HotelContext.Provider>
   );
 };
-
-// export const useHotelIdTheme = () => useContext(HotelContext);
