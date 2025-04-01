@@ -24,6 +24,7 @@
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
     "autoprefixer": "10.4.20",
+    "csv-parser": "^3.2.0",
     "d3": "^7.9.0",
     "d3-color": "^3.1.0",
     "eslint": "9.17.0",
