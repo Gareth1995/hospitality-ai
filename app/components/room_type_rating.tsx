@@ -35,7 +35,11 @@ const RoomTypeRating: React.FC = () => {
                 setRatingByRoom(data);
                 return data;
             } catch (err) {
-                console.log(err.message); // Handle errors
+                if (err instanceof Error) {
+                    console.log(err.message);
+                } else {
+                    console.log("An unknown error occurred", err);
+                }
                 return [];
             }
         };

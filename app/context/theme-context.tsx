@@ -1,33 +1,39 @@
 'use client';
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 
-// Default value for the context
-const ThemeContext = createContext({
-    theme: 'light', // Default theme
-    setTheme: () => {}, // Placeholder function
-  });
+// Define the type for the context value
+interface ThemeContextType {
+  theme: string;
+  setTheme: (theme: string) => void; // Explicitly define setTheme type
+}
 
-export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light');
+// Create the context with an initial value matching ThemeContextType
+const ThemeContext = createContext<ThemeContextType>({
+  theme: 'light', // Default theme
+  setTheme: () => {}, // Placeholder function (will be replaced in provider)
+});
+
+interface ThemeProviderProps {
+  children: ReactNode;
+}
+
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+  const [theme, setTheme] = useState<string>('light');
 
   // Sync with user's system preference
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') || 'light';
     setTheme(storedTheme);
-    document.documentElement.setAttribute('theme', storedTheme); // Set theme attribute to the html element
+    document.documentElement.setAttribute('theme', storedTheme);
   }, []);
 
-  // Update the `html` class and localStorage when theme changes
+  // Update the `html` attribute and localStorage when theme changes
   useEffect(() => {
-    // const storedTheme = localStorage.getItem('theme');
     document.documentElement.setAttribute('theme', theme);
-    // document.documentElement.classList.toggle('light', theme === 'light');
     localStorage.setItem('theme', theme);
-    // document.documentElement.setAttribute('theme', storedTheme || 'light'); // set theme attribute so that global.css can access change
   }, [theme]);
 
   return (
-    // allows theme and setTheme to be present for all children no useTheme can be called by any component
     <ThemeContext.Provider value={{ theme, setTheme }}>
       {children}
     </ThemeContext.Provider>

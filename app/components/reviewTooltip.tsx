@@ -3,8 +3,14 @@
 import React from 'react';
 import { Spinner } from '@heroui/react';
 
+interface Review {
+  reviewer_name: string;
+  review_text: string;
+  review_rating?: number;
+}
+
 interface ReviewModalProps {
-  reviews: string[]; // Adjust to match actual type (e.g., `any[]`, `Review[]`, etc.)
+  reviews: Review[]; // Adjust to match actual type (e.g., `any[]`, `Review[]`, etc.)
   isOpen: boolean;
   onClose: () => void;
   positionX?: string;
